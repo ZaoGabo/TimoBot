@@ -1,0 +1,149 @@
+import axios from 'axios';
+
+// Configuración de la API
+const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
+const API_KEY = 'pplx-tu-api-key-aqui'; // Reemplazar con tu API key real
+
+// Flag para usar mock o API real
+const USE_MOCK = true; // Cambiar a false cuando tengas la API key real
+
+/**
+ * Mock de respuestas para pruebas sin conexión
+ */
+const mockResponses = [
+  '¡Hola! Soy TimoBot, tu asistente personal. ¿En qué puedo ayudarte hoy?',
+  'Claro, entiendo tu pregunta. Déjame ayudarte con eso.',
+  'Esa es una excelente pregunta. Te explico...',
+  'Por supuesto, puedo ayudarte con eso. Aquí está la información que necesitas.',
+  'Interesante pregunta. La respuesta es...',
+  'Me alegra que me lo preguntes. Te cuento que...',
+  '¡Genial! Sobre eso puedo decirte que...',
+  'Perfecto, te ayudo con mucho gusto.'
+];
+
+/**
+ * Simula una llamada a la API con un delay
+ */
+const getMockResponse = async (message, userName) => {
+  // Simular delay de red
+  await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+  
+  // Seleccionar respuesta aleatoria
+  const randomIndex = Math.floor(Math.random() * mockResponses.length);
+  let response = mockResponses[randomIndex];
+  
+  // Personalizar con el nombre del usuario
+  if (userName && Math.random() > 0.5) {
+    response = `${response.split('.')[0]}, ${userName}. ${response.split('.').slice(1).join('.')}`;
+  }
+  
+  // Si el mensaje contiene palabras clave, dar respuestas más específicas
+  const lowerMessage = message.toLowerCase();
+  if (lowerMessage.includes('hola') || lowerMessage.includes('buenos días') || lowerMessage.includes('buenas')) {
+    response = `¡Hola ${userName}! ¿Cómo estás? Estoy aquí para ayudarte en lo que necesites.`;
+  } else if (lowerMessage.includes('cómo estás') || lowerMessage.includes('como estas')) {
+    response = `¡Muy bien, gracias por preguntar, ${userName}! Como siempre, listo para ayudarte. ¿Qué necesitas?`;
+  } else if (lowerMessage.includes('gracias')) {
+    response = `¡De nada, ${userName}! Siempre es un placer ayudarte. ¿Hay algo más en lo que pueda asistirte?`;
+  } else if (lowerMessage.includes('adiós') || lowerMessage.includes('adios') || lowerMessage.includes('hasta luego')) {
+    response = `¡Hasta luego, ${userName}! Que tengas un excelente día. Vuelve cuando necesites ayuda.`;
+  }
+  
+  return response;
+};
+
+/**
+ * Envía un mensaje a la API de Perplexity
+ * @param {string} message - Mensaje del usuario
+ * @param {string} userName - Nombre del usuario
+ * @param {Array} conversationHistory - Historial de la conversación
+ * @returns {Promise<string>} - Respuesta del bot
+ */
+export const sendMessageToPerplexity = async (message, userName = 'Usuario', conversationHistory = []) => {
+  try {
+    // Si estamos en modo mock, retornar respuesta simulada
+    if (USE_MOCK) {
+      return await getMockResponse(message, userName);
+    }
+
+    // Preparar el historial de conversación para la API
+    const messages = [
+      {
+        role: 'system',
+        content: `Eres TimoBot, un asistente amigable y personalizado. Siempre dirígete al usuario como ${userName}. Sé conciso, amable y útil.`
+      },
+      ...conversationHistory.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      })),
+      {
+        role: 'user',
+        content: message
+      }
+    ];
+
+    // Realizar la petición a la API de Perplexity
+    const response = await axios.post(
+      PERPLEXITY_API_URL,
+      {
+        model: 'llama-3.1-sonar-small-128k-online',
+        messages: messages,
+        max_tokens: 1000,
+        temperature: 0.7,
+        top_p: 0.9,
+        stream: false
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000
+      }
+    );
+
+    // Extraer la respuesta
+    if (response.data && response.data.choices && response.data.choices[0]) {
+      return response.data.choices[0].message.content;
+    } else {
+      throw new Error('Respuesta inválida de la API');
+    }
+
+  } catch (error) {
+    console.error('Error en la API de Perplexity:', error);
+    
+    // Manejo de errores específicos
+    if (error.response) {
+      // Error de respuesta del servidor
+      const status = error.response.status;
+      if (status === 401) {
+        return 'Error: API key inválida. Por favor verifica tu configuración.';
+      } else if (status === 429) {
+        return 'Error: Límite de solicitudes excedido. Intenta más tarde.';
+      } else if (status === 500) {
+        return 'Error: El servidor está experimentando problemas. Intenta más tarde.';
+      }
+    } else if (error.request) {
+      // Error de red
+      return 'Error: No se pudo conectar con el servidor. Verifica tu conexión a internet.';
+    }
+    
+    return `Lo siento ${userName}, ocurrió un error al procesar tu mensaje. Por favor, intenta nuevamente.`;
+  }
+};
+
+/**
+ * Configura la API key
+ * @param {string} apiKey - Nueva API key
+ */
+export const setApiKey = (apiKey) => {
+  API_KEY = apiKey;
+};
+
+/**
+ * Alterna entre modo mock y API real
+ * @param {boolean} useMock - true para usar mock, false para API real
+ */
+export const setUseMock = (useMock) => {
+  USE_MOCK = useMock;
+};

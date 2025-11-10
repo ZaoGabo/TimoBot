@@ -1,0 +1,399 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                      📁 ESTRUCTURA DEL PROYECTO TIMOBOT                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+TimoBot/
+│
+├── 📄 App.js                           # Punto de entrada principal
+├── 📄 package.json                     # Dependencias y scripts
+├── 📄 app.json                         # Configuración de Expo
+├── 📄 babel.config.js                  # Configuración de Babel
+├── 📄 .gitignore                       # Archivos ignorados por git
+├── 📄 .env.example                     # Ejemplo de variables de entorno
+│
+├── 📚 DOCUMENTACIÓN
+│   ├── 📖 START_HERE.md                # ⭐ EMPIEZA AQUÍ
+│   ├── 📖 README.md                    # Documentación completa
+│   ├── 📖 INSTALACION_RAPIDA.md        # Guía de instalación
+│   ├── 📖 DESARROLLO.md                # Guía técnica para devs
+│   ├── 📖 CONTRIBUTING.md              # Guía de contribución
+│   ├── 📖 CHANGELOG.md                 # Historia de versiones
+│   └── 📖 ESTRUCTURA_PROYECTO.txt      # Este archivo
+│
+├── 📁 assets/                          # Recursos gráficos
+│   └── 📄 README.md                    # Guía de assets
+│
+└── 📁 src/                             # Código fuente
+    │
+    ├── 📁 components/                  # Componentes reutilizables
+    │   ├── 💬 ChatMessage.js           # Burbujas de mensaje
+    │   ├── ⌨️  ChatInput.js            # Input con botón de envío
+    │   └── 🎯 Header.js                # Barra de navegación superior
+    │
+    ├── 📁 screens/                     # Pantallas principales
+    │   ├── 👋 WelcomeScreen.js         # Pantalla de bienvenida inicial
+    │   ├── 💬 ChatScreen.js            # Pantalla de chat principal
+    │   └── ⚙️  SettingsScreen.js       # Pantalla de configuración
+    │
+    ├── 📁 store/                       # Estado global (Zustand)
+    │   └── 🗄️  useSettingsStore.js     # Store principal de la app
+    │
+    ├── 📁 services/                    # Servicios externos
+    │   └── 🤖 perplexityApi.js         # Integración API Perplexity
+    │
+    └── 📁 utils/                       # Utilidades
+        └── 👋 greetings.js             # Saludos personalizados
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              📊 DESCRIPCIÓN DETALLADA                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🎯 ARCHIVOS PRINCIPALES                                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+App.js
+├─ Inicializa la aplicación
+├─ Configura React Navigation
+├─ Carga configuraciones del store
+├─ Define rutas (Welcome, Chat, Settings)
+└─ Maneja el estado de carga inicial
+
+package.json
+├─ Dependencias del proyecto
+├─ Scripts de ejecución (start, android, ios, web)
+├─ Información del proyecto (nombre, versión)
+└─ DevDependencies
+
+app.json
+├─ Configuración de Expo
+├─ Información de la app (nombre, slug, versión)
+├─ Configuración de assets (icon, splash)
+├─ Configuración iOS/Android
+└─ Bundle identifiers
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🧩 COMPONENTES (src/components/)                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+ChatMessage.js
+├─ Renderiza burbujas de chat
+├─ Estilos diferentes para usuario/bot
+├─ Soporte para tema claro/oscuro
+├─ Usa colores del store
+└─ Adapta tipografía seleccionada
+
+ChatInput.js
+├─ Input multilinea con auto-resize
+├─ Botón de enviar con icono
+├─ Validación de texto vacío
+├─ Límite de caracteres (500)
+├─ Soporte para temas
+└─ Estado disabled cuando está enviando
+
+Header.js
+├─ Barra de navegación superior
+├─ Título personalizable
+├─ Botones condicionales (settings, history, back)
+├─ Padding adaptable a plataforma
+├─ Usa color primario del store
+└─ Sombra y elevación
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📱 PANTALLAS (src/screens/)                                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+WelcomeScreen.js
+├─ Primera pantalla (solo si isFirstTime = true)
+├─ Solicita nombre del usuario
+├─ Validación de entrada
+├─ Animación de fade-in
+├─ Guarda nombre en AsyncStorage
+├─ Navega a ChatScreen después
+└─ Adapta estilo según tema
+
+ChatScreen.js
+├─ Pantalla principal de chat
+├─ Muestra historial de mensajes
+├─ Saludo diario personalizado
+├─ Envía mensajes a Perplexity API
+├─ Indicador de "escribiendo..."
+├─ Botón para nuevo chat
+├─ Modal de historial de sesiones
+├─ Auto-scroll a mensajes nuevos
+├─ Guarda conversaciones en AsyncStorage
+└─ Manejo de errores de API
+
+SettingsScreen.js
+├─ Configuración de la app
+├─ Toggle tema claro/oscuro
+├─ Selector de color primario (6 opciones)
+├─ Selector de fuente (3 opciones)
+├─ Botón para borrar historial
+├─ Botón para reiniciar nombre
+├─ Información de versión
+├─ Confirmaciones antes de acciones destructivas
+└─ Cambios se guardan automáticamente
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🗄️ STORE (src/store/)                                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+useSettingsStore.js
+├─ Estado global con Zustand
+├─ Configuración de usuario:
+│  ├─ userName: nombre del usuario
+│  ├─ isFirstTime: flag de primera apertura
+│  ├─ theme: 'light' | 'dark'
+│  ├─ primaryColor: color principal (hex)
+│  └─ fontFamily: tipo de letra
+├─ Historial de chat:
+│  ├─ chatHistory: mensajes actuales
+│  └─ chatSessions: sesiones guardadas
+├─ Acciones:
+│  ├─ setUserName()
+│  ├─ setTheme()
+│  ├─ setPrimaryColor()
+│  ├─ setFontFamily()
+│  ├─ addMessage()
+│  ├─ clearChatHistory()
+│  ├─ resetUserName()
+│  ├─ saveChatSession()
+│  ├─ loadChatSession()
+│  ├─ deleteChatSession()
+│  └─ loadSettings()
+└─ Persistencia en AsyncStorage
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🔌 SERVICIOS (src/services/)                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+perplexityApi.js
+├─ Integración con Perplexity AI
+├─ Modo mock para desarrollo (USE_MOCK = true)
+├─ Modo API real (USE_MOCK = false)
+├─ Función principal: sendMessageToPerplexity()
+├─ Personaliza respuestas con nombre del usuario
+├─ Manejo de conversación contextual
+├─ Manejo robusto de errores:
+│  ├─ 401: API key inválida
+│  ├─ 429: Límite de solicitudes
+│  ├─ 500: Error del servidor
+│  └─ Network: Sin conexión
+├─ Timeout de 30 segundos
+├─ Mock con respuestas inteligentes
+└─ Mock con delays realistas
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🛠️ UTILIDADES (src/utils/)                                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+greetings.js
+├─ dailyGreeting(userName)
+│  ├─ Saludo según día de la semana
+│  ├─ Saludo según hora del día
+│  ├─ Emoji temático por día
+│  └─ Mensaje personalizado con nombre
+├─ shortGreeting(userName)
+│  └─ Saludo corto para headers
+├─ formatDate(date)
+│  ├─ "Hoy, 14:30"
+│  ├─ "Ayer, 09:15"
+│  ├─ "Lunes, 16:00"
+│  └─ "12/11/2024 14:30"
+└─ getDayEmoji()
+   └─ Emoji del día actual
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           🔄 FLUJO DE LA APLICACIÓN                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+1️⃣ INICIO
+   App.js
+   └─ loadSettings() → Carga configuración de AsyncStorage
+   └─ isFirstTime?
+      ├─ true  → WelcomeScreen
+      └─ false → ChatScreen
+
+2️⃣ BIENVENIDA (Primera vez)
+   WelcomeScreen
+   ├─ Usuario ingresa nombre
+   ├─ setUserName(nombre) → Guarda en store y AsyncStorage
+   └─ navigation.replace('Chat') → Va a ChatScreen
+
+3️⃣ CHAT PRINCIPAL
+   ChatScreen
+   ├─ Muestra saludo diario (dailyGreeting)
+   ├─ Carga historial de AsyncStorage
+   ├─ Usuario escribe mensaje
+   │  ├─ addMessage(userMessage) → Agrega a chatHistory
+   │  ├─ sendMessageToPerplexity() → API o Mock
+   │  └─ addMessage(botResponse) → Agrega respuesta
+   ├─ Botón "Nuevo Chat"
+   │  └─ saveChatSession() → Guarda sesión actual
+   ├─ Botón "Historial"
+   │  ├─ Muestra modal con chatSessions
+   │  └─ loadChatSession(id) → Carga sesión anterior
+   └─ Botón "Ajustes" → SettingsScreen
+
+4️⃣ AJUSTES
+   SettingsScreen
+   ├─ Toggle tema → setTheme() → Guarda en AsyncStorage
+   ├─ Selector color → setPrimaryColor() → Guarda
+   ├─ Selector fuente → setFontFamily() → Guarda
+   ├─ Borrar historial → clearChatHistory() → Elimina de AsyncStorage
+   └─ Reiniciar nombre → resetUserName() → Vuelve a WelcomeScreen
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                            💾 ALMACENAMIENTO LOCAL                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+AsyncStorage Keys:
+├─ userName          → Nombre del usuario
+├─ isFirstTime       → 'true' | 'false'
+├─ theme             → 'light' | 'dark'
+├─ primaryColor      → '#HEXCODE'
+├─ fontFamily        → 'default' | 'serif' | 'monospace'
+├─ chatHistory       → JSON: Array de mensajes actuales
+└─ chatSessions      → JSON: Array de sesiones anteriores
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              📦 DEPENDENCIAS                                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Principales:
+├─ expo ~50.0.0                             # Framework
+├─ react 18.2.0                             # UI library
+├─ react-native 0.73.0                      # Mobile framework
+├─ @react-navigation/native ^6.1.9          # Navegación
+├─ @react-navigation/native-stack ^6.9.17   # Stack navigator
+├─ @react-native-async-storage/async-storage 1.21.0  # Storage
+├─ zustand ^4.4.7                           # State management
+├─ axios ^1.6.2                             # HTTP client
+├─ dayjs ^1.11.10                           # Date utility
+├─ expo-font ~11.10.0                       # Fuentes
+├─ @expo/vector-icons ^13.0.0               # Iconos
+├─ react-native-safe-area-context 4.8.2     # Safe areas
+└─ react-native-screens ~3.29.0             # Screen optimization
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                             🎨 PERSONALIZACIÓN                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Temas:
+├─ Light (Claro)
+│  ├─ Background: #FFFFFF
+│  ├─ Text: #000000
+│  ├─ Secondary: #F5F5F5
+│  └─ Border: #E0E0E0
+└─ Dark (Oscuro)
+   ├─ Background: #000000
+   ├─ Text: #FFFFFF
+   ├─ Secondary: #1C1C1E
+   └─ Border: #2C2C2E
+
+Colores Primarios:
+├─ Azul:    #4A90E2
+├─ Verde:   #2ECC71
+├─ Morado:  #9B59B6
+├─ Naranja: #E67E22
+├─ Rojo:    #E74C3C
+└─ Rosa:    #FF6B9D
+
+Fuentes:
+├─ Predeterminada (System)
+├─ Serif
+└─ Monospace
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                             ⚡ COMANDOS ÚTILES                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Desarrollo:
+├─ npm install              # Instala dependencias
+├─ npm start                # Inicia servidor de desarrollo
+├─ npm start -- -c          # Inicia limpiando caché
+├─ npm run android          # Abre en Android
+├─ npm run ios              # Abre en iOS (Mac only)
+└─ npm run web              # Abre en navegador
+
+Utilidades:
+├─ expo start --tunnel      # Modo túnel (firewall)
+├─ expo start --localhost   # Solo localhost
+├─ expo start --lan         # Red local
+├─ expo logs                # Ver logs
+└─ expo doctor              # Diagnóstico de problemas
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          📋 CHECKLIST DE DESARROLLO                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Setup Inicial:
+☐ Node.js instalado (v16+)
+☐ Expo CLI instalado globalmente
+☐ Dependencias instaladas (npm install)
+☐ Servidor iniciado (npm start)
+☐ App corriendo en dispositivo/emulador
+
+Funcionalidades:
+☐ WelcomeScreen funcionando
+☐ Nombre guardado correctamente
+☐ ChatScreen mostrando mensajes
+☐ API mock respondiendo
+☐ Historial guardándose
+☐ SettingsScreen funcionando
+☐ Cambios de tema aplicándose
+☐ Colores personalizables
+☐ Fuentes cambiando
+
+Próximos Pasos:
+☐ Configurar API real de Perplexity
+☐ Personalizar colores y temas
+☐ Agregar assets propios (icon, splash)
+☐ Testear en múltiples dispositivos
+☐ Preparar para producción
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              🚀 PRÓXIMAS FEATURES                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Planificadas:
+☐ Soporte para imágenes en chat
+☐ Reconocimiento de voz (Speech-to-Text)
+☐ Síntesis de voz (Text-to-Speech)
+☐ Búsqueda en historial
+☐ Exportar conversaciones (PDF/TXT)
+☐ Backup en la nube
+☐ Sincronización entre dispositivos
+☐ Notificaciones push
+☐ Widget para home screen
+☐ Modo offline con caché
+☐ Múltiples idiomas
+☐ Temas personalizados avanzados
+☐ Estadísticas de uso
+☐ Integración con otros LLMs
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                               📞 SOPORTE                                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Documentación:
+├─ START_HERE.md              → Inicio rápido
+├─ README.md                  → Documentación completa
+├─ INSTALACION_RAPIDA.md      → Guía de instalación
+├─ DESARROLLO.md              → Guía técnica
+└─ CONTRIBUTING.md            → Guía de contribución
+
+Recursos:
+├─ GitHub Issues              → Reportar bugs
+├─ GitHub Discussions         → Preguntas y discusiones
+├─ Expo Docs                  → https://docs.expo.dev/
+├─ React Native Docs          → https://reactnavigation.org/
+└─ Perplexity API Docs        → https://docs.perplexity.ai/
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                    ✨ ¡TimoBot está listo para usar! ✨
+                         🤖 Happy Coding! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════
