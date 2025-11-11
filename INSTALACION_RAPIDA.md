@@ -16,13 +16,19 @@ npm --version
 
 Si no tienes Node.js: [Descargar aquí](https://nodejs.org/)
 
-## Instalación en 3 Pasos
+## Instalación en 4 Pasos
 
-### 1. Instalar Expo CLI
+### 1. Configurar Variables de Entorno
 
 ```bash
-npm install -g expo-cli
+# Copia el archivo de ejemplo
+cp .env.example .env
+
+# Edita .env y coloca tu API key real
+PERPLEXITY_API_KEY="pplx-..."
 ```
+
+> ⚠️ No subas el archivo `.env` a Git: ya está ignorado por defecto.
 
 ### 2. Instalar Dependencias
 
@@ -37,7 +43,9 @@ npm install
 ### 3. Iniciar la Aplicación
 
 ```bash
-npm start
+npm run start
+# o
+npx expo start
 ```
 
 Verás algo como esto:
@@ -59,10 +67,10 @@ Verás algo como esto:
 **Opción B - Emulador:**
 
 ```bash
-# Android
+# Android (requiere Android Studio + SDK configurado)
 npm run android
 
-# iOS (solo en Mac)
+# iOS (solo en Mac con Xcode)
 npm run ios
 ```
 
@@ -76,10 +84,7 @@ La app debería estar corriendo. Verás:
 
 ### Error: "Command not found: expo"
 
-```bash
-# Reinstala Expo CLI globalmente
-npm install -g expo-cli
-```
+Usa `npx expo <comando>` para evitar instalar Expo CLI globalmente.
 
 ### Error de dependencias
 

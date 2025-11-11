@@ -1,11 +1,31 @@
 import axios from 'axios';
+import Constants from 'expo-constants';
 
 // Configuración de la API
 const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
-const API_KEY = 'pplx-tu-api-key-aqui'; // Reemplazar con tu API key real
 
-// Flag para usar mock o API real
-const USE_MOCK = true; // Cambiar a false cuando tengas la API key real
+const extraConfig = Constants.expoConfig?.extra ?? Constants.manifest?.extra ?? {};
+const runtimeApiKey = process.env.EXPO_PUBLIC_PERPLEXITY_API_KEY ?? process.env.PERPLEXITY_API_KEY ?? null;
+const runtimeProxyUrl = process.env.EXPO_PUBLIC_PERPLEXITY_PROXY_URL ?? process.env.PERPLEXITY_PROXY_URL ?? null;
+const runtimeUseMock = process.env.EXPO_PUBLIC_USE_MOCK ?? process.env.USE_MOCK_API;
+
+let API_KEY = extraConfig.perplexityApiKey ?? runtimeApiKey;
+let PROXY_URL = extraConfig.perplexityProxyUrl ?? runtimeProxyUrl ?? null;
+
+if (typeof PROXY_URL === 'string' && PROXY_URL.endsWith('/')) {
+  PROXY_URL = PROXY_URL.slice(0, -1);
+}
+
+const DEFAULT_MODEL = extraConfig.perplexityModel ?? 'llama-3.1-sonar-small-128k-online';
+const DEFAULT_MAX_TOKENS = extraConfig.perplexityMaxTokens ?? 1000;
+const DEFAULT_TEMPERATURE = extraConfig.perplexityTemperature ?? 0.7;
+const DEFAULT_TOP_P = extraConfig.perplexityTopP ?? 0.9;
+
+let USE_MOCK = typeof extraConfig.useMockApi === 'boolean'
+  ? extraConfig.useMockApi
+  : typeof runtimeUseMock === 'string'
+    ? runtimeUseMock !== 'false'
+    : !API_KEY && !PROXY_URL;
 
 /**
  * Mock de respuestas para pruebas sin conexión
@@ -82,24 +102,39 @@ export const sendMessageToPerplexity = async (message, userName = 'Usuario', con
       }
     ];
 
-    // Realizar la petición a la API de Perplexity
-    const response = await axios.post(
-      PERPLEXITY_API_URL,
-      {
-        model: 'llama-3.1-sonar-small-128k-online',
-        messages: messages,
-        max_tokens: 1000,
-        temperature: 0.7,
-        top_p: 0.9,
-        stream: false
+    const payload = {
+      model: DEFAULT_MODEL,
+      messages,
+      max_tokens: DEFAULT_MAX_TOKENS,
+      temperature: DEFAULT_TEMPERATURE,
+      top_p: DEFAULT_TOP_P,
+      stream: false
+    };
+
+    const endpoint = PROXY_URL
+      ? (PROXY_URL.includes('/api') ? PROXY_URL : `${PROXY_URL}/api/perplexity`)
+      : PERPLEXITY_API_URL;
+
+    const requestConfig = {
+      headers: {
+        'Content-Type': 'application/json'
       },
-      {
-        headers: {
-          'Authorization': `Bearer ${API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        timeout: 30000
+      timeout: 30000
+    };
+
+    if (!PROXY_URL) {
+      if (!API_KEY) {
+        throw new Error('Perplexity API key not configured');
       }
+
+      requestConfig.headers.Authorization = `Bearer ${API_KEY}`;
+    }
+
+    // Realizar la petición a la API de Perplexity (directa o vía proxy)
+    const response = await axios.post(
+      endpoint,
+      payload,
+      requestConfig
     );
 
     // Extraer la respuesta

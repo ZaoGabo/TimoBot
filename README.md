@@ -68,71 +68,38 @@ expo start
 
 Por defecto, la aplicación funciona en **modo mock** con respuestas simuladas. No necesitas configurar nada para probar la app.
 
-### Modo API Real
-
-Para usar la API real de Perplexity:
+### Modo API Real (Recomendado: Proxy en Vercel)
 
 1. **Obtén tu API Key**
    - Visita [Perplexity AI](https://www.perplexity.ai/)
    - Crea una cuenta y genera tu API key
 
-2. **Configura la API Key**
-   
-   Abre el archivo `src/services/perplexityApi.js` y modifica:
-   
-   ```javascript
-   // Línea 4: Reemplaza con tu API key
-   const API_KEY = 'pplx-tu-api-key-real';
-   
-   // Línea 7: Cambia a false para usar la API real
-   const USE_MOCK = false;
-   ```
+2. **Despliega el proxy en Vercel**
+   - Crea un repositorio aparte (por ejemplo, `timobot-backend`) con el contenido de `backend-vercel/`.
+   - Conecta ese repositorio a [Vercel](https://vercel.com/) y despliega; la función estará disponible en `https://tu-backend.vercel.app/api/perplexity`.
+   - En *Project Settings → Environment Variables* agrega `PERPLEXITY_API_KEY` con tu clave de Perplexity y vuelve a desplegar.
 
-3. **Reinicia la aplicación**
+3. **Configura el cliente**
+   - Copia el archivo de entorno si aún no lo has hecho:
+     ```bash
+     cp .env.example .env
+     ```
+   - Edita `.env` y añade la URL de tu despliegue:
+     ```env
+     PERPLEXITY_PROXY_URL=https://tu-backend.vercel.app
+     ```
+   - (Opcional) añade `PERPLEXITY_API_KEY` si quieres que el proyecto pueda funcionar sin proxy durante desarrollo.
+
+4. **Inicia la aplicación**
    ```bash
-   npm start
+   npm run start
    ```
 
-### Alternativa: Variables de Entorno
+Con esta configuración la app móvil enviará las solicitudes a Vercel, y la clave de Perplexity nunca viajará al cliente ni se expondrá en el repositorio.
 
-Para mayor seguridad, puedes usar variables de entorno:
+### Opción alternativa: Llamada directa desde el cliente
 
-1. **Crear archivo `.env`**
-   ```bash
-   cp .env.example .env
-   ```
-
-2. **Editar `.env`**
-   ```env
-   PERPLEXITY_API_KEY=pplx-tu-api-key-real
-   ```
-
-3. **Instalar dependencias adicionales**
-   ```bash
-   npm install react-native-dotenv
-   ```
-
-4. **Modificar `babel.config.js`**
-   ```javascript
-   module.exports = function(api) {
-     api.cache(true);
-     return {
-       presets: ['babel-preset-expo'],
-       plugins: [
-         ['module:react-native-dotenv', {
-           moduleName: '@env',
-           path: '.env',
-         }]
-       ]
-     };
-   };
-   ```
-
-5. **Actualizar `perplexityApi.js`**
-   ```javascript
-   import { PERPLEXITY_API_KEY } from '@env';
-   const API_KEY = PERPLEXITY_API_KEY;
-   ```
+Si necesitas conectarte directamente (por ejemplo, para pruebas rápidas), puedes rellenar `PERPLEXITY_API_KEY` en `.env`. Ten en cuenta que cualquier build distribuida contendrá la clave, por lo que no es recomendable para producción.
 
 ## Estructura del Proyecto
 
