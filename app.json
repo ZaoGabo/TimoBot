@@ -30,6 +30,9 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "perplexityProxyUrl": "https://backend-timobot.vercel.app"
+    }
   }
 }
