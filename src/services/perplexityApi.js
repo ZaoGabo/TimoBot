@@ -7,10 +7,12 @@ const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
 const extraConfig = Constants.expoConfig?.extra ?? Constants.manifest?.extra ?? {};
 const runtimeApiKey = process.env.EXPO_PUBLIC_PERPLEXITY_API_KEY ?? process.env.PERPLEXITY_API_KEY ?? null;
 const runtimeProxyUrl = process.env.EXPO_PUBLIC_PERPLEXITY_PROXY_URL ?? process.env.PERPLEXITY_PROXY_URL ?? null;
+const runtimeTimobotKey = process.env.EXPO_PUBLIC_TIMOBOT_API_KEY ?? process.env.TIMOBOT_API_KEY ?? null;
 const runtimeUseMock = process.env.EXPO_PUBLIC_USE_MOCK ?? process.env.USE_MOCK_API;
 
 let API_KEY = extraConfig.perplexityApiKey ?? runtimeApiKey;
 let PROXY_URL = extraConfig.perplexityProxyUrl ?? runtimeProxyUrl ?? null;
+const TIMOBOT_API_KEY = extraConfig.timobotApiKey ?? runtimeTimobotKey ?? null;
 
 if (typeof PROXY_URL === 'string' && PROXY_URL.endsWith('/')) {
   PROXY_URL = PROXY_URL.slice(0, -1);
@@ -151,7 +153,13 @@ export const sendMessageToPerplexity = async (message, userName = 'Usuario', con
       timeout: 30000
     };
 
-    if (!PROXY_URL) {
+    if (PROXY_URL) {
+      if (!TIMOBOT_API_KEY) {
+        throw new Error('Timobot API key not configured');
+      }
+
+      requestConfig.headers['x-timobot-key'] = TIMOBOT_API_KEY;
+    } else {
       if (!API_KEY) {
         throw new Error('Perplexity API key not configured');
       }
