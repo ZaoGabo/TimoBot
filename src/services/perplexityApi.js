@@ -27,6 +27,36 @@ let USE_MOCK = typeof extraConfig.useMockApi === 'boolean'
     ? runtimeUseMock !== 'false'
     : !API_KEY && !PROXY_URL;
 
+const sanitizeConversationHistory = (history = []) => {
+  const sanitized = [];
+  let started = false;
+
+  for (const item of history) {
+    if (!item || typeof item.role !== 'string' || typeof item.content !== 'string') {
+      continue;
+    }
+
+    if (!started) {
+      if (item.role !== 'user') {
+        continue;
+      }
+      started = true;
+      sanitized.push({ role: item.role, content: item.content });
+      continue;
+    }
+
+    const previous = sanitized[sanitized.length - 1];
+    if (previous.role === item.role) {
+      sanitized[sanitized.length - 1] = { role: item.role, content: item.content };
+      continue;
+    }
+
+    sanitized.push({ role: item.role, content: item.content });
+  }
+
+  return sanitized;
+};
+
 /**
  * Mock de respuestas para pruebas sin conexión
  */
@@ -87,15 +117,14 @@ export const sendMessageToPerplexity = async (message, userName = 'Usuario', con
     }
 
     // Preparar el historial de conversación para la API
+    const sanitizedHistory = sanitizeConversationHistory(conversationHistory);
+
     const messages = [
       {
         role: 'system',
         content: `Eres TimoBot, un asistente amigable y personalizado. Siempre dirígete al usuario como ${userName}. Sé conciso, amable y útil.`
       },
-      ...conversationHistory.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      })),
+      ...sanitizedHistory,
       {
         role: 'user',
         content: message
