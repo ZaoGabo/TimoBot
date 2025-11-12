@@ -16,7 +16,7 @@ if (typeof PROXY_URL === 'string' && PROXY_URL.endsWith('/')) {
   PROXY_URL = PROXY_URL.slice(0, -1);
 }
 
-const DEFAULT_MODEL = extraConfig.perplexityModel ?? 'llama-3.1-sonar-small-128k-online';
+const DEFAULT_MODEL = extraConfig.perplexityModel ?? 'sonar-small-online';
 const DEFAULT_MAX_TOKENS = extraConfig.perplexityMaxTokens ?? 1000;
 const DEFAULT_TEMPERATURE = extraConfig.perplexityTemperature ?? 0.7;
 const DEFAULT_TOP_P = extraConfig.perplexityTopP ?? 0.9;
