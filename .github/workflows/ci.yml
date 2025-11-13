@@ -63,6 +63,8 @@ jobs:
 
       - name: Check build
         run: npx expo export --platform all --output-dir dist
+        env: 
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
   code-quality:
     name: Code Quality Check
