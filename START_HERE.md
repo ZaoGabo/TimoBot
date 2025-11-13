@@ -5,6 +5,7 @@
 ## ¿Qué es TimoBot?
 
 **TimoBot** es un asistente conversacional inteligente creado con:
+
 - ⚛️ React Native + Expo
 - 🤖 API de Perplexity AI
 - 💾 Almacenamiento local con AsyncStorage
@@ -34,6 +35,7 @@ npm start
    - [Android (Play Store)](https://play.google.com/store/apps/details?id=host.exp.exponent)
 
 2. Ejecuta:
+
    ```bash
    npm start
    ```
@@ -43,11 +45,13 @@ npm start
 ### En Emulador
 
 **Android:**
+
 ```bash
 npm run android
 ```
 
 **iOS (solo Mac):**
+
 ```bash
 npm run ios
 ```
@@ -85,9 +89,10 @@ Por defecto, usa respuestas simuladas. **No necesitas configurar nada.**
 1. Obtén tu API key de [Perplexity AI](https://www.perplexity.ai/)
 
 2. Edita `src/services/perplexityApi.js`:
+
    ```javascript
    const API_KEY = 'pplx-tu-api-key-aqui';
-   const USE_MOCK = false;  // Cambia a false
+   const USE_MOCK = false; // Cambia a false
    ```
 
 3. Reinicia:
@@ -97,13 +102,13 @@ Por defecto, usa respuestas simuladas. **No necesitas configurar nada.**
 
 ## Documentación
 
-| Archivo | Descripción |
-|---------|-------------|
-| `README.md` | Documentación completa del proyecto |
-| `INSTALACION_RAPIDA.md` | Guía de instalación paso a paso |
-| `DESARROLLO.md` | Guía técnica para desarrolladores |
-| `CONTRIBUTING.md` | Cómo contribuir al proyecto |
-| `CHANGELOG.md` | Historia de versiones y cambios |
+| Archivo                 | Descripción                         |
+| ----------------------- | ----------------------------------- |
+| `README.md`             | Documentación completa del proyecto |
+| `INSTALACION_RAPIDA.md` | Guía de instalación paso a paso     |
+| `DESARROLLO.md`         | Guía técnica para desarrolladores   |
+| `CONTRIBUTING.md`       | Cómo contribuir al proyecto         |
+| `CHANGELOG.md`          | Historia de versiones y cambios     |
 
 ## Estructura del Proyecto
 
@@ -131,22 +136,26 @@ TimoBot/
 ## Características Principales
 
 ### Chat Inteligente
+
 - Conversaciones naturales con Perplexity AI
 - Personalización con tu nombre
 - Historial de conversaciones
 
 ### Personalización Total
+
 - **Tema:** Claro y oscuro
 - **Colores:** 6 opciones predefinidas
 - **Fuentes:** 3 tipos de letra
 - Todo se guarda automáticamente
 
 ### Saludos Dinámicos
+
 - Mensaje diferente cada día de la semana
 - Saludo según la hora (buenos días/tardes/noches)
 - Emojis temáticos por día
 
 ### Historial Local
+
 - Guarda todas tus conversaciones
 - Accede a chats anteriores
 - Crea múltiples sesiones de chat
@@ -171,21 +180,25 @@ npm update             # Actualiza dependencias
 ## Problemas Comunes
 
 ### "Command not found: expo"
+
 ```bash
 npm install -g expo-cli
 ```
 
 ### Error de dependencias
+
 ```bash
 rm -rf node_modules
 npm install
 ```
 
 ### App no se conecta
+
 - Verifica estar en la misma red WiFi
 - Intenta con túnel: `expo start --tunnel`
 
 ### Caché corrupta
+
 ```bash
 expo start -c
 ```
@@ -199,15 +212,15 @@ Busca y reemplaza "TimoBot" en todos los archivos.
 ### Cambiar el Saludo de Bienvenida
 
 Edita `src/screens/WelcomeScreen.js`:
+
 ```javascript
-<Text style={styles.title}>
-  ¡Hola! Soy TuBot
-</Text>
+<Text style={styles.title}>¡Hola! Soy TuBot</Text>
 ```
 
 ### Agregar Más Colores
 
 Edita `src/screens/SettingsScreen.js`:
+
 ```javascript
 const colorOptions = [
   { name: 'Tu Color', value: '#HEXCODE' },
@@ -218,6 +231,7 @@ const colorOptions = [
 ### Modificar Mensajes Mock
 
 Edita `src/services/perplexityApi.js`:
+
 ```javascript
 const mockResponses = [
   'Tu mensaje personalizado',
@@ -283,6 +297,7 @@ Ya tienes TimoBot funcionando. Ahora puedes:
 ## Roadmap
 
 ### Próximamente
+
 - [ ] Soporte para imágenes
 - [ ] Reconocimiento de voz
 - [ ] Exportar conversaciones
@@ -297,6 +312,6 @@ Lee `CONTRIBUTING.md` y empieza a desarrollar. ¡Los PRs son bienvenidos!
 
 **¡Disfruta usando TimoBot!**
 
-*¿Problemas? Crea un issue.*  
-*¿Mejoras? ¡Envía un PR!*  
-*¿Preguntas? Lee la documentación.*
+_¿Problemas? Crea un issue._  
+_¿Mejoras? ¡Envía un PR!_  
+_¿Preguntas? Lee la documentación._

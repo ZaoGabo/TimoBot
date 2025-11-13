@@ -5,9 +5,12 @@ import Constants from 'expo-constants';
 const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
 
 const extraConfig = Constants.expoConfig?.extra ?? Constants.manifest?.extra ?? {};
-const runtimeApiKey = process.env.EXPO_PUBLIC_PERPLEXITY_API_KEY ?? process.env.PERPLEXITY_API_KEY ?? null;
-const runtimeProxyUrl = process.env.EXPO_PUBLIC_PERPLEXITY_PROXY_URL ?? process.env.PERPLEXITY_PROXY_URL ?? null;
-const runtimeTimobotKey = process.env.EXPO_PUBLIC_TIMOBOT_API_KEY ?? process.env.TIMOBOT_API_KEY ?? null;
+const runtimeApiKey =
+  process.env.EXPO_PUBLIC_PERPLEXITY_API_KEY ?? process.env.PERPLEXITY_API_KEY ?? null;
+const runtimeProxyUrl =
+  process.env.EXPO_PUBLIC_PERPLEXITY_PROXY_URL ?? process.env.PERPLEXITY_PROXY_URL ?? null;
+const runtimeTimobotKey =
+  process.env.EXPO_PUBLIC_TIMOBOT_API_KEY ?? process.env.TIMOBOT_API_KEY ?? null;
 const runtimeUseMock = process.env.EXPO_PUBLIC_USE_MOCK ?? process.env.USE_MOCK_API;
 
 let API_KEY = extraConfig.perplexityApiKey ?? runtimeApiKey;
@@ -23,11 +26,12 @@ const DEFAULT_MAX_TOKENS = extraConfig.perplexityMaxTokens ?? 1000;
 const DEFAULT_TEMPERATURE = extraConfig.perplexityTemperature ?? 0.7;
 const DEFAULT_TOP_P = extraConfig.perplexityTopP ?? 0.9;
 
-let USE_MOCK = typeof extraConfig.useMockApi === 'boolean'
-  ? extraConfig.useMockApi
-  : typeof runtimeUseMock === 'string'
-    ? runtimeUseMock !== 'false'
-    : !API_KEY && !PROXY_URL;
+let USE_MOCK =
+  typeof extraConfig.useMockApi === 'boolean'
+    ? extraConfig.useMockApi
+    : typeof runtimeUseMock === 'string'
+      ? runtimeUseMock !== 'false'
+      : !API_KEY && !PROXY_URL;
 
 const sanitizeConversationHistory = (history = []) => {
   const sanitized = [];
@@ -70,7 +74,7 @@ const mockResponses = [
   'Interesante pregunta. La respuesta es...',
   'Me alegra que me lo preguntes. Te cuento que...',
   '¡Genial! Sobre eso puedo decirte que...',
-  'Perfecto, te ayudo con mucho gusto.'
+  'Perfecto, te ayudo con mucho gusto.',
 ];
 
 /**
@@ -78,30 +82,61 @@ const mockResponses = [
  */
 const getMockResponse = async (message, userName) => {
   // Simular delay de red
-  await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
-  
+  await new Promise((resolve) => setTimeout(resolve, 1000 + Math.random() * 1000));
+
   // Seleccionar respuesta aleatoria
   const randomIndex = Math.floor(Math.random() * mockResponses.length);
   let response = mockResponses[randomIndex];
-  
+
   // Personalizar con el nombre del usuario
   if (userName && Math.random() > 0.5) {
     response = `${response.split('.')[0]}, ${userName}. ${response.split('.').slice(1).join('.')}`;
   }
-  
+
   // Si el mensaje contiene palabras clave, dar respuestas más específicas
   const lowerMessage = message.toLowerCase();
-  if (lowerMessage.includes('hola') || lowerMessage.includes('buenos días') || lowerMessage.includes('buenas')) {
+  if (
+    lowerMessage.includes('hola') ||
+    lowerMessage.includes('buenos días') ||
+    lowerMessage.includes('buenas')
+  ) {
     response = `¡Hola ${userName}! ¿Cómo estás? Estoy aquí para ayudarte en lo que necesites.`;
   } else if (lowerMessage.includes('cómo estás') || lowerMessage.includes('como estas')) {
     response = `¡Muy bien, gracias por preguntar, ${userName}! Como siempre, listo para ayudarte. ¿Qué necesitas?`;
   } else if (lowerMessage.includes('gracias')) {
     response = `¡De nada, ${userName}! Siempre es un placer ayudarte. ¿Hay algo más en lo que pueda asistirte?`;
-  } else if (lowerMessage.includes('adiós') || lowerMessage.includes('adios') || lowerMessage.includes('hasta luego')) {
+  } else if (
+    lowerMessage.includes('adiós') ||
+    lowerMessage.includes('adios') ||
+    lowerMessage.includes('hasta luego')
+  ) {
     response = `¡Hasta luego, ${userName}! Que tengas un excelente día. Vuelve cuando necesites ayuda.`;
   }
-  
+
   return response;
+};
+
+/**
+ * Sanitiza y valida la entrada del usuario
+ * @param {string} input - Entrada a validar
+ * @returns {string} - Entrada sanitizada
+ */
+const sanitizeInput = (input) => {
+  if (typeof input !== 'string') {
+    throw new Error('Input must be a string');
+  }
+
+  // Remover caracteres potencialmente peligrosos
+  const sanitized = input
+    .trim()
+    .replace(/[<>]/g, '') // Prevenir XSS básico
+    .substring(0, 5000); // Limitar longitud
+
+  if (sanitized.length === 0) {
+    throw new Error('Input cannot be empty');
+  }
+
+  return sanitized;
 };
 
 /**
@@ -111,11 +146,19 @@ const getMockResponse = async (message, userName) => {
  * @param {Array} conversationHistory - Historial de la conversación
  * @returns {Promise<string>} - Respuesta del bot
  */
-export const sendMessageToPerplexity = async (message, userName = 'Usuario', conversationHistory = []) => {
+export const sendMessageToPerplexity = async (
+  message,
+  userName = 'Usuario',
+  conversationHistory = []
+) => {
   try {
+    // Validar y sanitizar entrada
+    const sanitizedMessage = sanitizeInput(message);
+    const sanitizedUserName = sanitizeInput(userName);
+
     // Si estamos en modo mock, retornar respuesta simulada
     if (USE_MOCK) {
-      return await getMockResponse(message, userName);
+      return await getMockResponse(sanitizedMessage, sanitizedUserName);
     }
 
     // Preparar el historial de conversación para la API
@@ -124,13 +167,13 @@ export const sendMessageToPerplexity = async (message, userName = 'Usuario', con
     const messages = [
       {
         role: 'system',
-        content: `Eres TimoBot, un asistente amigable y personalizado. Siempre dirígete al usuario como ${userName}. Sé conciso, amable y útil.`
+        content: `Eres TimoBot, un asistente amigable y personalizado. Siempre dirígete al usuario como ${sanitizedUserName}. Sé conciso, amable y útil.`,
       },
       ...sanitizedHistory,
       {
         role: 'user',
-        content: message
-      }
+        content: sanitizedMessage,
+      },
     ];
 
     const payload = {
@@ -139,18 +182,20 @@ export const sendMessageToPerplexity = async (message, userName = 'Usuario', con
       max_tokens: DEFAULT_MAX_TOKENS,
       temperature: DEFAULT_TEMPERATURE,
       top_p: DEFAULT_TOP_P,
-      stream: false
+      stream: false,
     };
 
     const endpoint = PROXY_URL
-      ? (PROXY_URL.includes('/api') ? PROXY_URL : `${PROXY_URL}/api/perplexity`)
+      ? PROXY_URL.includes('/api')
+        ? PROXY_URL
+        : `${PROXY_URL}/api/perplexity`
       : PERPLEXITY_API_URL;
 
     const requestConfig = {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      timeout: 30000
+      timeout: 30000,
     };
 
     if (PROXY_URL) {
@@ -168,11 +213,7 @@ export const sendMessageToPerplexity = async (message, userName = 'Usuario', con
     }
 
     // Realizar la petición a la API de Perplexity (directa o vía proxy)
-    const response = await axios.post(
-      endpoint,
-      payload,
-      requestConfig
-    );
+    const response = await axios.post(endpoint, payload, requestConfig);
 
     // Extraer la respuesta
     if (response.data && response.data.choices && response.data.choices[0]) {
@@ -180,10 +221,9 @@ export const sendMessageToPerplexity = async (message, userName = 'Usuario', con
     } else {
       throw new Error('Respuesta inválida de la API');
     }
-
   } catch (error) {
     console.error('Error en la API de Perplexity:', error);
-    
+
     // Manejo de errores específicos
     if (error.response) {
       // Error de respuesta del servidor
@@ -199,7 +239,7 @@ export const sendMessageToPerplexity = async (message, userName = 'Usuario', con
       // Error de red
       return 'Error: No se pudo conectar con el servidor. Verifica tu conexión a internet.';
     }
-    
+
     return `Lo siento ${userName}, ocurrió un error al procesar tu mensaje. Por favor, intenta nuevamente.`;
   }
 };

@@ -22,7 +22,7 @@ export default function App() {
     };
 
     initializeApp();
-  }, []);
+  }, [loadSettings]);
 
   if (isLoading) {
     return (

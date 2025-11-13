@@ -62,25 +62,25 @@ const useSettingsStore = create((set, get) => ({
       id: Date.now().toString(),
       date: new Date().toISOString(),
       messages: chatHistory,
-      preview: chatHistory[0]?.text?.substring(0, 50) || 'Chat sin título'
+      preview: chatHistory[0]?.text?.substring(0, 50) || 'Chat sin título',
     };
 
     const updatedSessions = [newSession, ...chatSessions];
     set({ chatSessions: updatedSessions, chatHistory: [] });
-    
+
     await AsyncStorage.setItem('chatSessions', JSON.stringify(updatedSessions));
     await AsyncStorage.removeItem('chatHistory');
   },
 
   loadChatSession: (sessionId) => {
-    const session = get().chatSessions.find(s => s.id === sessionId);
+    const session = get().chatSessions.find((s) => s.id === sessionId);
     if (session) {
       set({ chatHistory: session.messages });
     }
   },
 
   deleteChatSession: async (sessionId) => {
-    const updatedSessions = get().chatSessions.filter(s => s.id !== sessionId);
+    const updatedSessions = get().chatSessions.filter((s) => s.id !== sessionId);
     set({ chatSessions: updatedSessions });
     await AsyncStorage.setItem('chatSessions', JSON.stringify(updatedSessions));
   },
@@ -88,23 +88,16 @@ const useSettingsStore = create((set, get) => ({
   // Load all settings from AsyncStorage
   loadSettings: async () => {
     try {
-      const [
-        userName,
-        isFirstTime,
-        theme,
-        primaryColor,
-        fontFamily,
-        chatHistory,
-        chatSessions
-      ] = await Promise.all([
-        AsyncStorage.getItem('userName'),
-        AsyncStorage.getItem('isFirstTime'),
-        AsyncStorage.getItem('theme'),
-        AsyncStorage.getItem('primaryColor'),
-        AsyncStorage.getItem('fontFamily'),
-        AsyncStorage.getItem('chatHistory'),
-        AsyncStorage.getItem('chatSessions')
-      ]);
+      const [userName, isFirstTime, theme, primaryColor, fontFamily, chatHistory, chatSessions] =
+        await Promise.all([
+          AsyncStorage.getItem('userName'),
+          AsyncStorage.getItem('isFirstTime'),
+          AsyncStorage.getItem('theme'),
+          AsyncStorage.getItem('primaryColor'),
+          AsyncStorage.getItem('fontFamily'),
+          AsyncStorage.getItem('chatHistory'),
+          AsyncStorage.getItem('chatSessions'),
+        ]);
 
       set({
         userName: userName || null,
@@ -113,12 +106,12 @@ const useSettingsStore = create((set, get) => ({
         primaryColor: primaryColor || '#4A90E2',
         fontFamily: fontFamily || 'default',
         chatHistory: chatHistory ? JSON.parse(chatHistory) : [],
-        chatSessions: chatSessions ? JSON.parse(chatSessions) : []
+        chatSessions: chatSessions ? JSON.parse(chatSessions) : [],
       });
     } catch (error) {
       console.error('Error loading settings:', error);
     }
-  }
+  },
 }));
 
 export default useSettingsStore;

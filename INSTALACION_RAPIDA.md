@@ -49,6 +49,7 @@ npx expo start
 ```
 
 Verás algo como esto:
+
 ```
 › Metro waiting on exp://192.168.1.X:8081
 › Scan the QR code above with Expo Go (Android) or the Camera app (iOS)
@@ -77,6 +78,7 @@ npm run ios
 ## ¡Listo!
 
 La app debería estar corriendo. Verás:
+
 1. Pantalla de bienvenida pidiendo tu nombre
 2. Después, el chat con TimoBot
 

@@ -3,5 +3,5 @@
 
 module.exports = {
   TIMOBOT_API_KEY: 'clave api',
-  PERPLEXITY_PROXY_URL: 'https://tu-dominio.com/api' // cambia si usas otro host
-}
+  PERPLEXITY_PROXY_URL: 'https://tu-dominio.com/api', // cambia si usas otro host
+};

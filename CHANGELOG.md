@@ -10,6 +10,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ### Lanzamiento Inicial
 
 #### Agregado
+
 - **Pantalla de Bienvenida**
   - Solicitud de nombre del usuario
   - Validación de entrada
@@ -73,6 +74,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
   - Manejo de timezones
 
 #### Diseño
+
 - Interfaz limpia y minimalista
 - Soporte completo para tema oscuro
 - Colores personalizables
@@ -82,6 +84,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Diseño responsive
 
 #### Configuración
+
 - Proyecto Expo configurado
 - Navegación con React Navigation
 - Babel configurado
@@ -90,6 +93,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Git ignore adecuado
 
 #### Documentación
+
 - README.md completo
 - DESARROLLO.md con guía técnica
 - Comentarios en código
@@ -97,30 +101,35 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Ejemplos de uso
 
 #### Internacionalización
+
 - Interfaz en español
 - Saludos contextuales en español
 - Formato de fechas en español
 - Mensajes de error en español
 
 ### Seguridad
+
 - API keys no incluidas en el código
 - Ejemplo de .env
 - AsyncStorage para datos locales
 - Validación de inputs
 
 ### Rendimiento
+
 - Lazy loading de pantallas
 - Optimización de FlatList
 - Memoización de componentes
 - Reducción de re-renders innecesarios
 
 ### Conocidos
+
 - Los assets de iconos usan placeholders de Expo
 - El modo mock es limitado en contexto de conversación
 - No hay soporte offline completo
 - No hay sincronización en la nube
 
 ### Notas de Desarrollo
+
 - Versión de React Native: 0.73.0
 - Versión de Expo: ~50.0.0
 - Node.js requerido: v16+
@@ -131,6 +140,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ## [Unreleased]
 
 ### Próximas Características
+
 - [ ] Soporte para imágenes en chat
 - [ ] Reconocimiento de voz
 - [ ] Síntesis de voz (Text-to-Speech)
@@ -148,6 +158,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - [ ] Comandos rápidos
 
 ### Mejoras Planificadas
+
 - [ ] Tests unitarios
 - [ ] Tests de integración
 - [ ] CI/CD con GitHub Actions
@@ -159,6 +170,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - [ ] Indicador de estado de conexión
 
 ### Bugs por Corregir
+
 - [ ] Scroll intermitente en iOS
 - [ ] Keyboard overlay en Android
 - [ ] Memory leaks en navegación
@@ -178,6 +190,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
 **Convención de Versionado:**
+
 - MAJOR: Cambios incompatibles de API
 - MINOR: Nueva funcionalidad compatible hacia atrás
 - PATCH: Correcciones de bugs compatibles hacia atrás

@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useCallback, useMemo } from 'react';
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useSettingsStore from '../store/useSettingsStore';
 
 const ChatInput = ({ onSend, disabled = false }) => {
   const [message, setMessage] = useState('');
   const { theme, primaryColor, fontFamily } = useSettingsStore();
-  
+
   const isDark = theme === 'dark';
 
-  const handleSend = () => {
+  const handleSend = useCallback(() => {
     if (message.trim() && !disabled) {
       onSend(message.trim());
       setMessage('');
     }
-  };
+  }, [message, disabled, onSend]);
 
-  const getFontStyle = () => {
+  const fontStyle = useMemo(() => {
     switch (fontFamily) {
       case 'serif':
         return { fontFamily: 'serif' };
@@ -25,27 +32,17 @@ const ChatInput = ({ onSend, disabled = false }) => {
       default:
         return {};
     }
-  };
+  }, [fontFamily]);
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
     >
-      <View style={[
-        styles.container,
-        { backgroundColor: isDark ? '#1C1C1E' : '#FFFFFF' }
-      ]}>
-        <View style={[
-          styles.inputContainer,
-          { backgroundColor: isDark ? '#2C2C2E' : '#F0F0F0' }
-        ]}>
+      <View style={[styles.container, { backgroundColor: isDark ? '#1C1C1E' : '#FFFFFF' }]}>
+        <View style={[styles.inputContainer, { backgroundColor: isDark ? '#2C2C2E' : '#F0F0F0' }]}>
           <TextInput
-            style={[
-              styles.input,
-              { color: isDark ? '#FFFFFF' : '#000000' },
-              getFontStyle()
-            ]}
+            style={[styles.input, { color: isDark ? '#FFFFFF' : '#000000' }, fontStyle]}
             placeholder="Escribe tu mensaje..."
             placeholderTextColor={isDark ? '#8E8E93' : '#999999'}
             value={message}
@@ -60,16 +57,12 @@ const ChatInput = ({ onSend, disabled = false }) => {
             style={[
               styles.sendButton,
               { backgroundColor: primaryColor },
-              (disabled || !message.trim()) && styles.sendButtonDisabled
+              (disabled || !message.trim()) && styles.sendButtonDisabled,
             ]}
             onPress={handleSend}
             disabled={disabled || !message.trim()}
           >
-            <Ionicons 
-              name="send" 
-              size={20} 
-              color="#FFFFFF" 
-            />
+            <Ionicons name="send" size={20} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
       </View>
@@ -112,4 +105,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatInput;
+export default React.memo(ChatInput);

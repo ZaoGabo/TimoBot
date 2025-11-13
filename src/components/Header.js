@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useSettingsStore from '../store/useSettingsStore';
 
-const Header = ({ title, showSettings, showHistory, onSettingsPress, onHistoryPress, showBack, onBackPress }) => {
-  const { theme, primaryColor, fontFamily } = useSettingsStore();
-  
-  const isDark = theme === 'dark';
+const Header = ({
+  title,
+  showSettings,
+  showHistory,
+  onSettingsPress,
+  onHistoryPress,
+  showBack,
+  onBackPress,
+}) => {
+  const { primaryColor, fontFamily } = useSettingsStore();
 
-  const getFontStyle = () => {
+  const fontStyle = useMemo(() => {
     switch (fontFamily) {
       case 'serif':
         return { fontFamily: 'serif' };
@@ -17,31 +23,41 @@ const Header = ({ title, showSettings, showHistory, onSettingsPress, onHistoryPr
       default:
         return {};
     }
-  };
+  }, [fontFamily]);
 
   return (
-    <View style={[
-      styles.container,
-      { 
-        backgroundColor: primaryColor,
-        paddingTop: Platform.OS === 'ios' ? 50 : 20
-      }
-    ]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: primaryColor,
+          paddingTop: Platform.OS === 'ios' ? 50 : 20,
+        },
+      ]}
+    >
       <View style={styles.content}>
         {/* Botón izquierdo */}
         <View style={styles.leftSection}>
           {showBack && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.iconButton}
               onPress={onBackPress}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="Volver atrás"
+              accessibilityHint="Navega a la pantalla anterior"
             >
               <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
             </TouchableOpacity>
           )}
           {showHistory && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.iconButton}
               onPress={onHistoryPress}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="Ver historial"
+              accessibilityHint="Abre el historial de conversaciones"
             >
               <Ionicons name="time-outline" size={24} color="#FFFFFF" />
             </TouchableOpacity>
@@ -50,9 +66,11 @@ const Header = ({ title, showSettings, showHistory, onSettingsPress, onHistoryPr
 
         {/* Título */}
         <View style={styles.centerSection}>
-          <Text 
-            style={[styles.title, getFontStyle()]}
+          <Text
+            style={[styles.title, fontStyle]}
             numberOfLines={1}
+            accessible={true}
+            accessibilityRole="header"
           >
             {title}
           </Text>
@@ -61,9 +79,13 @@ const Header = ({ title, showSettings, showHistory, onSettingsPress, onHistoryPr
         {/* Botón derecho */}
         <View style={styles.rightSection}>
           {showSettings && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.iconButton}
               onPress={onSettingsPress}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="Configuración"
+              accessibilityHint="Abre la pantalla de ajustes"
             >
               <Ionicons name="settings-outline" size={24} color="#FFFFFF" />
             </TouchableOpacity>
@@ -115,4 +137,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header;
+export default React.memo(Header);

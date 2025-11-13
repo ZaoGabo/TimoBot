@@ -20,6 +20,7 @@ Este proyecto adhiere a un código de conducta. Al participar, se espera que man
 ### Nuestros Estándares
 
 ✅ **Se recomienda:**
+
 - Usar lenguaje inclusivo y acogedor
 - Respetar diferentes puntos de vista
 - Aceptar críticas constructivas
@@ -27,6 +28,7 @@ Este proyecto adhiere a un código de conducta. Al participar, se espera que man
 - Mostrar empatía hacia otros miembros
 
 ❌ **No se tolera:**
+
 - Lenguaje o imágenes sexualizadas
 - Comentarios insultantes o despectivos
 - Acoso público o privado
@@ -99,32 +101,40 @@ Crea un issue con:
 **Título:** Descripción breve y clara
 
 **Descripción:**
+
 ```markdown
 ## Descripción del Bug
+
 [Descripción clara del problema]
 
 ## Pasos para Reproducir
+
 1. Ve a '...'
 2. Click en '...'
 3. Scroll hasta '...'
 4. Ver error
 
 ## Comportamiento Esperado
+
 [Qué debería pasar]
 
 ## Comportamiento Actual
+
 [Qué pasa actualmente]
 
 ## Screenshots
+
 [Si aplica, agrega capturas]
 
 ## Entorno
+
 - OS: [e.g. iOS 16, Android 13]
 - Versión de la App: [e.g. 1.0.0]
 - Dispositivo: [e.g. iPhone 14, Pixel 7]
 - Versión de Expo: [e.g. 50.0.0]
 
 ## Información Adicional
+
 [Cualquier otro contexto relevante]
 ```
 
@@ -141,18 +151,23 @@ Crea un issue con:
 
 ```markdown
 ## Descripción de la Feature
+
 [Descripción clara de la funcionalidad]
 
 ## Motivación
+
 [Por qué es útil esta feature]
 
 ## Propuesta de Implementación
+
 [Ideas de cómo implementarlo]
 
 ## Alternativas Consideradas
+
 [Otras formas de resolver el problema]
 
 ## Información Adicional
+
 [Mockups, ejemplos, referencias]
 ```
 
@@ -175,21 +190,26 @@ Antes de enviar un PR, verifica:
 
 ```markdown
 ## Descripción
+
 [Descripción clara de los cambios]
 
 ## Tipo de Cambio
+
 - [ ] Bug fix (cambio que corrige un issue)
 - [ ] Nueva feature (cambio que agrega funcionalidad)
 - [ ] Breaking change (fix o feature que causa cambios incompatibles)
 - [ ] Documentación
 
 ## ¿Cómo se ha Probado?
+
 [Describe las pruebas realizadas]
 
 ## Screenshots
+
 [Si aplica, agrega capturas]
 
 ## Checklist
+
 - [ ] Mi código sigue el estilo del proyecto
 - [ ] He realizado self-review
 - [ ] He comentado código complejo
@@ -199,6 +219,7 @@ Antes de enviar un PR, verifica:
 - [ ] Tests nuevos y existentes pasan
 
 ## Issues Relacionados
+
 Closes #123
 Related to #456
 ```
@@ -213,11 +234,11 @@ Related to #456
 // ✅ Bueno
 const Component = ({ prop1, prop2 }) => {
   const [state, setState] = useState(null);
-  
+
   useEffect(() => {
     // Lógica
   }, [state]);
-  
+
   return (
     <View style={styles.container}>
       <Text>Contenido</Text>
@@ -226,10 +247,14 @@ const Component = ({ prop1, prop2 }) => {
 };
 
 // ❌ Malo
-const Component = ({prop1,prop2})=>{
-  const [state,setState]=useState(null)
-  return <View><Text>Contenido</Text></View>
-}
+const Component = ({ prop1, prop2 }) => {
+  const [state, setState] = useState(null);
+  return (
+    <View>
+      <Text>Contenido</Text>
+    </View>
+  );
+};
 ```
 
 #### Naming
@@ -301,10 +326,7 @@ const styles = StyleSheet.create({
 });
 
 // ✅ Inline styles solo para valores dinámicos
-<View style={[
-  styles.container,
-  { backgroundColor: isDark ? '#000' : '#FFF' }
-]} />
+<View style={[styles.container, { backgroundColor: isDark ? '#000' : '#FFF' }]} />;
 ```
 
 ### Comentarios
@@ -368,6 +390,7 @@ WIP
 ```
 
 Ejemplo completo:
+
 ```
 feat(chat): agregar soporte para imágenes
 
@@ -404,19 +427,17 @@ describe('ChatInput', () => {
     const { getByPlaceholder } = render(<ChatInput />);
     expect(getByPlaceholder('Escribe tu mensaje...')).toBeTruthy();
   });
-  
+
   it('should call onSend when button is pressed', () => {
     const mockOnSend = jest.fn();
-    const { getByPlaceholder, getByTestId } = render(
-      <ChatInput onSend={mockOnSend} />
-    );
-    
+    const { getByPlaceholder, getByTestId } = render(<ChatInput onSend={mockOnSend} />);
+
     const input = getByPlaceholder('Escribe tu mensaje...');
     fireEvent.changeText(input, 'Hola');
-    
+
     const button = getByTestId('send-button');
     fireEvent.press(button);
-    
+
     expect(mockOnSend).toHaveBeenCalledWith('Hola');
   });
 });
@@ -425,6 +446,7 @@ describe('ChatInput', () => {
 ## 🏗️ Áreas de Contribución
 
 ### Fácil (Good First Issues)
+
 - Corregir typos en documentación
 - Mejorar mensajes de error
 - Agregar comentarios al código
@@ -432,6 +454,7 @@ describe('ChatInput', () => {
 - Agregar ejemplos
 
 ### Media
+
 - Implementar nuevas features pequeñas
 - Corregir bugs conocidos
 - Mejorar UI/UX
@@ -439,6 +462,7 @@ describe('ChatInput', () => {
 - Agregar tests
 
 ### Avanzada
+
 - Implementar features complejas
 - Refactorizar arquitectura
 - Migrar a TypeScript
@@ -455,6 +479,7 @@ describe('ChatInput', () => {
 Gracias a todos los que contribuyen a hacer TimoBot mejor cada día.
 
 ### Hall of Fame
+
 - [Tu nombre aquí] - Primera contribución
 - [Tu nombre aquí] - Mejor feature
 - [Tu nombre aquí] - Más commits

@@ -30,27 +30,27 @@ module.exports = {
     splash: {
       image: './assets/splash.png',
       resizeMode: 'contain',
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
     },
     assetBundlePatterns: ['**/*'],
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.timobot.app'
+      bundleIdentifier: 'com.timobot.app',
     },
     android: {
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
       },
-      package: 'com.timobot.app'
+      package: 'com.timobot.app',
     },
     web: {
-      favicon: './assets/favicon.png'
+      favicon: './assets/favicon.png',
     },
     plugins: ['expo-font'],
     extra: {
       timobotApiKey,
-      perplexityProxyUrl
-    }
-  }
+      perplexityProxyUrl,
+    },
+  },
 };

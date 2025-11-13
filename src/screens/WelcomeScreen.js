@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Animated
+  Animated,
 } from 'react-native';
 import useSettingsStore from '../store/useSettingsStore';
 
@@ -22,7 +22,7 @@ const WelcomeScreen = ({ navigation }) => {
       duration: 1000,
       useNativeDriver: true,
     }).start();
-  }, []);
+  }, [fadeAnim]);
 
   const handleContinue = async () => {
     if (name.trim()) {
@@ -34,38 +34,26 @@ const WelcomeScreen = ({ navigation }) => {
   const isDark = theme === 'dark';
 
   return (
-    <KeyboardAvoidingView 
-      style={[
-        styles.container,
-        { backgroundColor: isDark ? '#000000' : '#FFFFFF' }
-      ]}
+    <KeyboardAvoidingView
+      style={[styles.container, { backgroundColor: isDark ? '#000000' : '#FFFFFF' }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         {/* Logo o emoji del bot */}
         <Text style={styles.botEmoji}>🤖</Text>
-        
+
         {/* Título */}
-        <Text style={[
-          styles.title,
-          { color: isDark ? '#FFFFFF' : '#000000' }
-        ]}>
+        <Text style={[styles.title, { color: isDark ? '#FFFFFF' : '#000000' }]}>
           ¡Hola! Soy TimoBot
         </Text>
-        
+
         {/* Subtítulo */}
-        <Text style={[
-          styles.subtitle,
-          { color: isDark ? '#B0B0B0' : '#666666' }
-        ]}>
+        <Text style={[styles.subtitle, { color: isDark ? '#B0B0B0' : '#666666' }]}>
           Tu asistente personal inteligente
         </Text>
 
         {/* Descripción */}
-        <Text style={[
-          styles.description,
-          { color: isDark ? '#8E8E93' : '#999999' }
-        ]}>
+        <Text style={[styles.description, { color: isDark ? '#8E8E93' : '#999999' }]}>
           Para comenzar, cuéntame ¿cómo te llamas?
         </Text>
 
@@ -74,11 +62,11 @@ const WelcomeScreen = ({ navigation }) => {
           <TextInput
             style={[
               styles.input,
-              { 
+              {
                 backgroundColor: isDark ? '#1C1C1E' : '#F5F5F5',
                 color: isDark ? '#FFFFFF' : '#000000',
-                borderColor: isDark ? '#2C2C2E' : '#E0E0E0'
-              }
+                borderColor: isDark ? '#2C2C2E' : '#E0E0E0',
+              },
             ]}
             placeholder="Tu nombre"
             placeholderTextColor={isDark ? '#8E8E93' : '#999999'}
@@ -96,21 +84,16 @@ const WelcomeScreen = ({ navigation }) => {
           style={[
             styles.button,
             { backgroundColor: primaryColor },
-            !name.trim() && styles.buttonDisabled
+            !name.trim() && styles.buttonDisabled,
           ]}
           onPress={handleContinue}
           disabled={!name.trim()}
         >
-          <Text style={styles.buttonText}>
-            Comenzar
-          </Text>
+          <Text style={styles.buttonText}>Comenzar</Text>
         </TouchableOpacity>
 
         {/* Footer */}
-        <Text style={[
-          styles.footer,
-          { color: isDark ? '#666666' : '#CCCCCC' }
-        ]}>
+        <Text style={[styles.footer, { color: isDark ? '#666666' : '#CCCCCC' }]}>
           Versión 1.0.0
         </Text>
       </Animated.View>

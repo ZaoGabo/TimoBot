@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  View, 
-  FlatList, 
-  StyleSheet, 
+import {
+  View,
+  FlatList,
+  StyleSheet,
   ActivityIndicator,
   Text,
   TouchableOpacity,
-  Modal
+  Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useSettingsStore from '../store/useSettingsStore';
@@ -20,17 +20,17 @@ const ChatScreen = ({ navigation }) => {
   const flatListRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
-  
-  const { 
-    userName, 
-    theme, 
+
+  const {
+    userName,
+    theme,
     primaryColor,
-    chatHistory, 
+    chatHistory,
     addMessage,
     chatSessions,
     saveChatSession,
     loadChatSession,
-    deleteChatSession
+    deleteChatSession,
   } = useSettingsStore();
 
   const isDark = theme === 'dark';
@@ -42,11 +42,11 @@ const ChatScreen = ({ navigation }) => {
         id: Date.now().toString(),
         text: dailyGreeting(userName),
         isUser: false,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
       addMessage(welcomeMessage);
     }
-  }, []);
+  }, [addMessage, chatHistory.length, userName]);
 
   const handleSendMessage = async (text) => {
     // Agregar mensaje del usuario
@@ -54,9 +54,9 @@ const ChatScreen = ({ navigation }) => {
       id: Date.now().toString(),
       text: text,
       isUser: true,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-    
+
     await addMessage(userMessage);
     setIsLoading(true);
 
@@ -67,9 +67,9 @@ const ChatScreen = ({ navigation }) => {
 
     try {
       // Preparar historial de conversación para la API
-      const conversationHistory = chatHistory.map(msg => ({
+      const conversationHistory = chatHistory.map((msg) => ({
         role: msg.isUser ? 'user' : 'assistant',
-        content: msg.text
+        content: msg.text,
       }));
 
       // Enviar a la API de Perplexity
@@ -80,7 +80,7 @@ const ChatScreen = ({ navigation }) => {
         id: (Date.now() + 1).toString(),
         text: response,
         isUser: false,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       await addMessage(botMessage);
@@ -89,17 +89,16 @@ const ChatScreen = ({ navigation }) => {
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
-
     } catch (error) {
       console.error('Error sending message:', error);
-      
+
       const errorMessage = {
         id: (Date.now() + 1).toString(),
         text: `Lo siento ${userName}, ocurrió un error. Por favor intenta nuevamente.`,
         isUser: false,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
-      
+
       await addMessage(errorMessage);
     } finally {
       setIsLoading(false);
@@ -107,15 +106,16 @@ const ChatScreen = ({ navigation }) => {
   };
 
   const handleNewChat = async () => {
-    if (chatHistory.length > 1) { // Más que solo el mensaje de bienvenida
+    if (chatHistory.length > 1) {
+      // Más que solo el mensaje de bienvenida
       await saveChatSession();
-      
+
       // Agregar nuevo mensaje de bienvenida
       const welcomeMessage = {
         id: Date.now().toString(),
         text: dailyGreeting(userName),
         isUser: false,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
       await addMessage(welcomeMessage);
     }
@@ -130,12 +130,7 @@ const ChatScreen = ({ navigation }) => {
     await deleteChatSession(sessionId);
   };
 
-  const renderMessage = ({ item }) => (
-    <ChatMessage 
-      message={item.text} 
-      isUser={item.isUser}
-    />
-  );
+  const renderMessage = ({ item }) => <ChatMessage message={item.text} isUser={item.isUser} />;
 
   const renderHistoryModal = () => (
     <Modal
@@ -145,23 +140,13 @@ const ChatScreen = ({ navigation }) => {
       onRequestClose={() => setShowHistoryModal(false)}
     >
       <View style={styles.modalOverlay}>
-        <View style={[
-          styles.modalContent,
-          { backgroundColor: isDark ? '#1C1C1E' : '#FFFFFF' }
-        ]}>
+        <View style={[styles.modalContent, { backgroundColor: isDark ? '#1C1C1E' : '#FFFFFF' }]}>
           <View style={styles.modalHeader}>
-            <Text style={[
-              styles.modalTitle,
-              { color: isDark ? '#FFFFFF' : '#000000' }
-            ]}>
+            <Text style={[styles.modalTitle, { color: isDark ? '#FFFFFF' : '#000000' }]}>
               Conversaciones Anteriores
             </Text>
             <TouchableOpacity onPress={() => setShowHistoryModal(false)}>
-              <Ionicons 
-                name="close" 
-                size={28} 
-                color={isDark ? '#FFFFFF' : '#000000'} 
-              />
+              <Ionicons name="close" size={28} color={isDark ? '#FFFFFF' : '#000000'} />
             </TouchableOpacity>
           </View>
 
@@ -169,28 +154,24 @@ const ChatScreen = ({ navigation }) => {
             data={chatSessions}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <View style={[
-                styles.sessionItem,
-                { backgroundColor: isDark ? '#2C2C2E' : '#F5F5F5' }
-              ]}>
-                <TouchableOpacity 
+              <View
+                style={[styles.sessionItem, { backgroundColor: isDark ? '#2C2C2E' : '#F5F5F5' }]}
+              >
+                <TouchableOpacity
                   style={styles.sessionInfo}
                   onPress={() => handleLoadSession(item.id)}
                 >
-                  <Text style={[
-                    styles.sessionPreview,
-                    { color: isDark ? '#FFFFFF' : '#000000' }
-                  ]} numberOfLines={2}>
+                  <Text
+                    style={[styles.sessionPreview, { color: isDark ? '#FFFFFF' : '#000000' }]}
+                    numberOfLines={2}
+                  >
                     {item.preview}
                   </Text>
-                  <Text style={[
-                    styles.sessionDate,
-                    { color: isDark ? '#8E8E93' : '#666666' }
-                  ]}>
+                  <Text style={[styles.sessionDate, { color: isDark ? '#8E8E93' : '#666666' }]}>
                     {formatDate(item.date)}
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => handleDeleteSession(item.id)}
                 >
@@ -200,15 +181,12 @@ const ChatScreen = ({ navigation }) => {
             )}
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
-                <Ionicons 
-                  name="chatbubbles-outline" 
-                  size={64} 
-                  color={isDark ? '#666666' : '#CCCCCC'} 
+                <Ionicons
+                  name="chatbubbles-outline"
+                  size={64}
+                  color={isDark ? '#666666' : '#CCCCCC'}
                 />
-                <Text style={[
-                  styles.emptyText,
-                  { color: isDark ? '#666666' : '#999999' }
-                ]}>
+                <Text style={[styles.emptyText, { color: isDark ? '#666666' : '#999999' }]}>
                   No hay conversaciones anteriores
                 </Text>
               </View>
@@ -220,10 +198,7 @@ const ChatScreen = ({ navigation }) => {
   );
 
   return (
-    <View style={[
-      styles.container,
-      { backgroundColor: isDark ? '#000000' : '#FFFFFF' }
-    ]}>
+    <View style={[styles.container, { backgroundColor: isDark ? '#000000' : '#FFFFFF' }]}>
       <Header
         title="TimoBot"
         showSettings={true}
@@ -234,7 +209,7 @@ const ChatScreen = ({ navigation }) => {
 
       {/* Botón de nuevo chat */}
       {chatHistory.length > 1 && (
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.newChatButton, { backgroundColor: primaryColor }]}
           onPress={handleNewChat}
         >
@@ -257,20 +232,14 @@ const ChatScreen = ({ navigation }) => {
       {isLoading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="small" color={primaryColor} />
-          <Text style={[
-            styles.loadingText,
-            { color: isDark ? '#8E8E93' : '#666666' }
-          ]}>
+          <Text style={[styles.loadingText, { color: isDark ? '#8E8E93' : '#666666' }]}>
             TimoBot está escribiendo...
           </Text>
         </View>
       )}
 
       {/* Input de mensaje */}
-      <ChatInput 
-        onSend={handleSendMessage}
-        disabled={isLoading}
-      />
+      <ChatInput onSend={handleSendMessage} disabled={isLoading} />
 
       {/* Modal de historial */}
       {renderHistoryModal()}

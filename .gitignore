@@ -20,4 +20,18 @@ secrets.js
 .env
 .env.local
 
-#archivos secretos locales 
+# Testing
+coverage/
+*.coverage
+.nyc_output
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+#archivos secretos locales
+*.md
+!README.md

@@ -26,7 +26,7 @@ function parseJsonBody(req) {
   return new Promise((resolve, reject) => {
     let data = '';
 
-    req.on('data', chunk => {
+    req.on('data', (chunk) => {
       data += chunk;
     });
 
@@ -74,11 +74,13 @@ module.exports = async (req, res) => {
     max_tokens = 1000,
     temperature = 0.7,
     top_p = 0.9,
-    stream = false
+    stream = false,
   } = body || {};
 
   if (!Array.isArray(messages) || messages.length === 0) {
-    return res.status(400).json({ error: 'The request body must include a non-empty "messages" array.' });
+    return res
+      .status(400)
+      .json({ error: 'The request body must include a non-empty "messages" array.' });
   }
 
   try {
@@ -90,14 +92,14 @@ module.exports = async (req, res) => {
         max_tokens,
         temperature,
         top_p,
-        stream
+        stream,
       },
       {
         headers: {
           Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        timeout: 30000
+        timeout: 30000,
       }
     );
 
@@ -107,7 +109,7 @@ module.exports = async (req, res) => {
     const errorPayload = {
       error: 'Failed to call Perplexity API.',
       status,
-      details: error.response?.data || error.message
+      details: error.response?.data || error.message,
     };
 
     return res.status(status).json(errorPayload);

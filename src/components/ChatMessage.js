@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import useSettingsStore from '../store/useSettingsStore';
 
 const ChatMessage = ({ message, isUser }) => {
   const { theme, primaryColor, fontFamily } = useSettingsStore();
-  
+
   const isDark = theme === 'dark';
-  
-  const getFontStyle = () => {
+
+  const fontStyle = useMemo(() => {
     switch (fontFamily) {
       case 'serif':
         return { fontFamily: 'serif' };
@@ -16,28 +16,32 @@ const ChatMessage = ({ message, isUser }) => {
       default:
         return {};
     }
-  };
+  }, [fontFamily]);
 
   return (
-    <View style={[
-      styles.container,
-      isUser ? styles.userContainer : styles.botContainer
-    ]}>
-      <View style={[
-        styles.bubble,
-        isUser ? [styles.userBubble, { backgroundColor: primaryColor }] : [
-          styles.botBubble,
-          { backgroundColor: isDark ? '#2C2C2E' : '#F0F0F0' }
-        ]
-      ]}>
-        <Text style={[
-          styles.text,
-          isUser ? styles.userText : [
-            styles.botText,
-            { color: isDark ? '#FFFFFF' : '#000000' }
-          ],
-          getFontStyle()
-        ]}>
+    <View
+      style={[styles.container, isUser ? styles.userContainer : styles.botContainer]}
+      accessible={true}
+      accessibilityRole="text"
+    >
+      <View
+        style={[
+          styles.bubble,
+          isUser
+            ? [styles.userBubble, { backgroundColor: primaryColor }]
+            : [styles.botBubble, { backgroundColor: isDark ? '#2C2C2E' : '#F0F0F0' }],
+        ]}
+        accessible={true}
+        accessibilityLabel={`${isUser ? 'Tu mensaje' : 'Respuesta del bot'}: ${message}`}
+      >
+        <Text
+          style={[
+            styles.text,
+            isUser ? styles.userText : [styles.botText, { color: isDark ? '#FFFFFF' : '#000000' }],
+            fontStyle,
+          ]}
+          accessible={true}
+        >
           {message}
         </Text>
       </View>
@@ -80,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatMessage;
+export default React.memo(ChatMessage);

@@ -1,13 +1,5 @@
-import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  StyleSheet, 
-  ScrollView,
-  Switch,
-  Alert
-} from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Switch, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useSettingsStore from '../store/useSettingsStore';
 import Header from '../components/Header';
@@ -22,7 +14,7 @@ const SettingsScreen = ({ navigation }) => {
     setPrimaryColor,
     setFontFamily,
     clearChatHistory,
-    resetUserName
+    resetUserName,
   } = useSettingsStore();
 
   const isDark = theme === 'dark';
@@ -54,8 +46,8 @@ const SettingsScreen = ({ navigation }) => {
           onPress: async () => {
             await clearChatHistory();
             Alert.alert('Listo', 'El historial ha sido borrado.');
-          }
-        }
+          },
+        },
       ]
     );
   };
@@ -71,56 +63,33 @@ const SettingsScreen = ({ navigation }) => {
           onPress: async () => {
             await resetUserName();
             navigation.replace('Welcome');
-          }
-        }
+          },
+        },
       ]
     );
   };
 
   const SettingSection = ({ title, children }) => (
     <View style={styles.section}>
-      <Text style={[
-        styles.sectionTitle,
-        { color: isDark ? '#FFFFFF' : '#000000' }
-      ]}>
-        {title}
-      </Text>
-      <View style={[
-        styles.sectionContent,
-        { backgroundColor: isDark ? '#1C1C1E' : '#F5F5F5' }
-      ]}>
+      <Text style={[styles.sectionTitle, { color: isDark ? '#FFFFFF' : '#000000' }]}>{title}</Text>
+      <View style={[styles.sectionContent, { backgroundColor: isDark ? '#1C1C1E' : '#F5F5F5' }]}>
         {children}
       </View>
     </View>
   );
 
   const SettingItem = ({ icon, label, onPress, showArrow = true, rightComponent }) => (
-    <TouchableOpacity 
-      style={styles.settingItem}
-      onPress={onPress}
-      disabled={!onPress}
-    >
+    <TouchableOpacity style={styles.settingItem} onPress={onPress} disabled={!onPress}>
       <View style={styles.settingLeft}>
-        <Ionicons 
-          name={icon} 
-          size={24} 
-          color={isDark ? '#FFFFFF' : '#000000'} 
-        />
-        <Text style={[
-          styles.settingLabel,
-          { color: isDark ? '#FFFFFF' : '#000000' }
-        ]}>
+        <Ionicons name={icon} size={24} color={isDark ? '#FFFFFF' : '#000000'} />
+        <Text style={[styles.settingLabel, { color: isDark ? '#FFFFFF' : '#000000' }]}>
           {label}
         </Text>
       </View>
       <View style={styles.settingRight}>
         {rightComponent}
         {showArrow && (
-          <Ionicons 
-            name="chevron-forward" 
-            size={20} 
-            color={isDark ? '#8E8E93' : '#999999'} 
-          />
+          <Ionicons name="chevron-forward" size={20} color={isDark ? '#8E8E93' : '#999999'} />
         )}
       </View>
     </TouchableOpacity>
@@ -131,13 +100,15 @@ const SettingsScreen = ({ navigation }) => {
       style={[
         styles.colorOption,
         { backgroundColor: color },
-        isSelected && styles.colorOptionSelected
+        isSelected && styles.colorOptionSelected,
       ]}
       onPress={() => setPrimaryColor(color)}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={`${name}${isSelected ? ' (seleccionado)' : ''}`}
+      accessibilityHint="Selecciona el color principal"
     >
-      {isSelected && (
-        <Ionicons name="checkmark" size={24} color="#FFFFFF" />
-      )}
+      {isSelected && <Ionicons name="checkmark" size={24} color="#FFFFFF" />}
     </TouchableOpacity>
   );
 
@@ -145,38 +116,31 @@ const SettingsScreen = ({ navigation }) => {
     <TouchableOpacity
       style={[
         styles.fontOption,
-        { 
+        {
           backgroundColor: isDark ? '#2C2C2E' : '#FFFFFF',
-          borderColor: isSelected ? primaryColor : (isDark ? '#3C3C3E' : '#E0E0E0')
+          borderColor: isSelected ? primaryColor : isDark ? '#3C3C3E' : '#E0E0E0',
         },
-        isSelected && { borderWidth: 2 }
+        isSelected && { borderWidth: 2 },
       ]}
       onPress={() => setFontFamily(font)}
     >
-      <Text style={[
-        styles.fontOptionText,
-        { color: isDark ? '#FFFFFF' : '#000000' },
-        font === 'serif' && { fontFamily: 'serif' },
-        font === 'monospace' && { fontFamily: 'monospace' }
-      ]}>
+      <Text
+        style={[
+          styles.fontOptionText,
+          { color: isDark ? '#FFFFFF' : '#000000' },
+          font === 'serif' && { fontFamily: 'serif' },
+          font === 'monospace' && { fontFamily: 'monospace' },
+        ]}
+      >
         {name}
       </Text>
-      {isSelected && (
-        <Ionicons name="checkmark-circle" size={20} color={primaryColor} />
-      )}
+      {isSelected && <Ionicons name="checkmark-circle" size={20} color={primaryColor} />}
     </TouchableOpacity>
   );
 
   return (
-    <View style={[
-      styles.container,
-      { backgroundColor: isDark ? '#000000' : '#FFFFFF' }
-    ]}>
-      <Header
-        title="Ajustes"
-        showBack={true}
-        onBackPress={() => navigation.goBack()}
-      />
+    <View style={[styles.container, { backgroundColor: isDark ? '#000000' : '#FFFFFF' }]}>
+      <Header title="Ajustes" showBack={true} onBackPress={() => navigation.goBack()} />
 
       <ScrollView style={styles.scrollView}>
         {/* Usuario */}
@@ -191,7 +155,7 @@ const SettingsScreen = ({ navigation }) => {
         {/* Apariencia */}
         <SettingSection title="Apariencia">
           <SettingItem
-            icon={isDark ? "moon" : "sunny"}
+            icon={isDark ? 'moon' : 'sunny'}
             label="Tema Oscuro"
             showArrow={false}
             rightComponent={
@@ -235,25 +199,15 @@ const SettingsScreen = ({ navigation }) => {
 
         {/* Datos */}
         <SettingSection title="Datos">
-          <SettingItem
-            icon="trash-outline"
-            label="Borrar Historial"
-            onPress={handleClearHistory}
-          />
+          <SettingItem icon="trash-outline" label="Borrar Historial" onPress={handleClearHistory} />
         </SettingSection>
 
         {/* Información */}
         <View style={styles.infoSection}>
-          <Text style={[
-            styles.infoText,
-            { color: isDark ? '#666666' : '#999999' }
-          ]}>
+          <Text style={[styles.infoText, { color: isDark ? '#666666' : '#999999' }]}>
             TimoBot v1.0.0
           </Text>
-          <Text style={[
-            styles.infoText,
-            { color: isDark ? '#666666' : '#999999' }
-          ]}>
+          <Text style={[styles.infoText, { color: isDark ? '#666666' : '#999999' }]}>
             Powered by Perplexity AI
           </Text>
         </View>

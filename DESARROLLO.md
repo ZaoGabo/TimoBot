@@ -61,25 +61,25 @@ El store maneja:
 
 ```javascript
 // Configuración de usuario
-setUserName(name)
-resetUserName()
+setUserName(name);
+resetUserName();
 
 // Configuración de apariencia
-setTheme(theme)
-setPrimaryColor(color)
-setFontFamily(font)
+setTheme(theme);
+setPrimaryColor(color);
+setFontFamily(font);
 
 // Manejo de mensajes
-addMessage(message)
-clearChatHistory()
+addMessage(message);
+clearChatHistory();
 
 // Manejo de sesiones
-saveChatSession()
-loadChatSession(sessionId)
-deleteChatSession(sessionId)
+saveChatSession();
+loadChatSession(sessionId);
+deleteChatSession(sessionId);
 
 // Inicialización
-loadSettings()
+loadSettings();
 ```
 
 ## Componentes Principales
@@ -89,10 +89,12 @@ loadSettings()
 Renderiza una burbuja de mensaje.
 
 **Props:**
+
 - `message: string` - Texto del mensaje
 - `isUser: boolean` - Si es mensaje del usuario o del bot
 
 **Personalización:**
+
 - Colores se toman del store
 - Estilos diferentes para usuario/bot
 - Soporte para temas claro/oscuro
@@ -102,10 +104,12 @@ Renderiza una burbuja de mensaje.
 Input de texto con botón de envío.
 
 **Props:**
+
 - `onSend: (text: string) => void` - Callback al enviar
 - `disabled: boolean` - Deshabilitar input
 
 **Características:**
+
 - Multiline con límite de caracteres
 - Auto-resize hasta 100px
 - Botón deshabilitado si texto vacío
@@ -115,6 +119,7 @@ Input de texto con botón de envío.
 Barra de navegación superior.
 
 **Props:**
+
 - `title: string` - Título a mostrar
 - `showSettings: boolean` - Mostrar botón de ajustes
 - `showHistory: boolean` - Mostrar botón de historial
@@ -140,10 +145,11 @@ const USE_MOCK = true; // false para API real
 #### Función Principal
 
 ```javascript
-sendMessageToPerplexity(message, userName, conversationHistory)
+sendMessageToPerplexity(message, userName, conversationHistory);
 ```
 
 **Parámetros:**
+
 - `message`: string - Mensaje del usuario
 - `userName`: string - Nombre del usuario
 - `conversationHistory`: Array - Historial de conversación
@@ -153,6 +159,7 @@ sendMessageToPerplexity(message, userName, conversationHistory)
 #### Mock vs Real
 
 El modo mock simula respuestas con:
+
 - Delay aleatorio (1-2 segundos)
 - Respuestas contextuales
 - Personalización con nombre del usuario
@@ -180,12 +187,13 @@ try {
 #### dailyGreeting(userName)
 
 Retorna un saludo personalizado según:
+
 - Día de la semana
 - Hora del día
 - Nombre del usuario
 
 ```javascript
-dailyGreeting('Juan')
+dailyGreeting('Juan');
 // => "Buenos días, Juan"
 ```
 
@@ -194,13 +202,14 @@ dailyGreeting('Juan')
 Saludo corto para headers.
 
 ```javascript
-shortGreeting('Juan')
+shortGreeting('Juan');
 // => "Buenos días, Juan"
 ```
 
 #### formatDate(date)
 
 Formatea fechas de forma amigable:
+
 - "Hoy, 14:30"
 - "Ayer, 09:15"
 - "Lunes, 16:00"
@@ -209,6 +218,7 @@ Formatea fechas de forma amigable:
 #### getDayEmoji()
 
 Retorna emoji según el día:
+
 - Domingo
 - Lunes
 - Martes
@@ -228,21 +238,20 @@ const { theme, primaryColor } = useSettingsStore();
 const isDark = theme === 'dark';
 
 // Usar en estilos
-<View style={[
-  styles.container,
-  { backgroundColor: isDark ? '#000000' : '#FFFFFF' }
-]} />
+<View style={[styles.container, { backgroundColor: isDark ? '#000000' : '#FFFFFF' }]} />;
 ```
 
 ### Colores del Tema
 
 **Modo Claro:**
+
 - Background: `#FFFFFF`
 - Text: `#000000`
 - Secondary: `#F5F5F5`
 - Border: `#E0E0E0`
 
 **Modo Oscuro:**
+
 - Background: `#000000`
 - Text: `#FFFFFF`
 - Secondary: `#1C1C1E`
@@ -272,7 +281,7 @@ export default NuevaPantalla;
 // App.js
 import NuevaPantalla from './src/screens/NuevaPantalla';
 
-<Stack.Screen name="Nueva" component={NuevaPantalla} />
+<Stack.Screen name="Nueva" component={NuevaPantalla} />;
 
 // 3. Navegar
 navigation.navigate('Nueva');
@@ -288,7 +297,7 @@ create((set) => ({
   setNuevaConfig: async (valor) => {
     set({ nuevaConfig: valor });
     await AsyncStorage.setItem('nuevaConfig', valor);
-  }
+  },
 }));
 
 // 2. Cargar en loadSettings
@@ -351,16 +360,14 @@ import ChatInput from '../src/components/ChatInput';
 describe('ChatInput', () => {
   it('debería llamar onSend al presionar el botón', () => {
     const mockOnSend = jest.fn();
-    const { getByPlaceholder, getByTestId } = render(
-      <ChatInput onSend={mockOnSend} />
-    );
-    
+    const { getByPlaceholder, getByTestId } = render(<ChatInput onSend={mockOnSend} />);
+
     const input = getByPlaceholder('Escribe tu mensaje...');
     const button = getByTestId('send-button');
-    
+
     fireEvent.changeText(input, 'Hola');
     fireEvent.press(button);
-    
+
     expect(mockOnSend).toHaveBeenCalledWith('Hola');
   });
 });
@@ -446,6 +453,7 @@ InteractionManager.runAfterInteractions(() => {
 **NUNCA** commits API keys al repositorio.
 
 Usa:
+
 1. Variables de entorno (`.env`)
 2. Servicios de secrets (AWS Secrets Manager)
 3. Config nativa (iOS Keychain, Android Keystore)
@@ -478,7 +486,7 @@ const Component = () => {
   const valorExpensivo = useMemo(() => {
     return calcularAlgo();
   }, [dependencias]);
-  
+
   const handleAction = useCallback(() => {
     // acción
   }, [dependencias]);
@@ -501,7 +509,7 @@ const Component = () => {
   getItemLayout={(data, index) => ({
     length: ITEM_HEIGHT,
     offset: ITEM_HEIGHT * index,
-    index
+    index,
   })}
 />
 ```
