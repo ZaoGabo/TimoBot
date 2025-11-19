@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as db from '../services/database';
 
 const useSettingsStore = create((set, get) => ({
   // User settings
@@ -12,7 +13,8 @@ const useSettingsStore = create((set, get) => ({
   fontFamily: 'default', // 'default', 'serif', 'monospace'
 
   // Chat history
-  chatHistory: [], // Array de mensajes
+  currentSessionId: null,
+  chatHistory: [], // Array de mensajes actuales
   chatSessions: [], // Array de sesiones de chat anteriores
 
   // Actions
@@ -38,14 +40,35 @@ const useSettingsStore = create((set, get) => ({
   },
 
   addMessage: async (message) => {
+    let { currentSessionId } = get();
+
+    // Si no hay sesión activa, crear una nueva
+    if (!currentSessionId) {
+      currentSessionId = Date.now().toString();
+      const preview = message.text.substring(0, 50);
+      await db.createSession(currentSessionId, new Date().toISOString(), preview);
+      set({ currentSessionId });
+
+      // Actualizar lista de sesiones
+      const sessions = await db.getSessions();
+      set({ chatSessions: sessions });
+    }
+
+    // Guardar mensaje en SQLite
+    await db.saveMessage(currentSessionId, message);
+
+    // Actualizar estado local
     const updatedHistory = [...get().chatHistory, message];
     set({ chatHistory: updatedHistory });
-    await AsyncStorage.setItem('chatHistory', JSON.stringify(updatedHistory));
+
+    // Actualizar lista de sesiones (para reflejar cambios en preview/fecha)
+    const sessions = await db.getSessions();
+    set({ chatSessions: sessions });
   },
 
   clearChatHistory: async () => {
-    set({ chatHistory: [] });
-    await AsyncStorage.removeItem('chatHistory');
+    // Esto ahora funciona como "Nuevo Chat" visualmente o "Cerrar Sesión actual"
+    set({ chatHistory: [], currentSessionId: null });
   },
 
   resetUserName: async () => {
@@ -55,49 +78,45 @@ const useSettingsStore = create((set, get) => ({
   },
 
   saveChatSession: async () => {
-    const { chatHistory, chatSessions } = get();
-    if (chatHistory.length === 0) return;
-
-    const newSession = {
-      id: Date.now().toString(),
-      date: new Date().toISOString(),
-      messages: chatHistory,
-      preview: chatHistory[0]?.text?.substring(0, 50) || 'Chat sin título',
-    };
-
-    const updatedSessions = [newSession, ...chatSessions];
-    set({ chatSessions: updatedSessions, chatHistory: [] });
-
-    await AsyncStorage.setItem('chatSessions', JSON.stringify(updatedSessions));
-    await AsyncStorage.removeItem('chatHistory');
+    // Con SQLite, la sesión ya se guarda automáticamente con cada mensaje.
+    // Esta función ahora solo limpia el estado actual para empezar uno nuevo.
+    set({ chatHistory: [], currentSessionId: null });
   },
 
-  loadChatSession: (sessionId) => {
-    const session = get().chatSessions.find((s) => s.id === sessionId);
-    if (session) {
-      set({ chatHistory: session.messages });
-    }
+  loadChatSession: async (sessionId) => {
+    const messages = await db.getMessages(sessionId);
+    set({ currentSessionId: sessionId, chatHistory: messages });
   },
 
   deleteChatSession: async (sessionId) => {
-    const updatedSessions = get().chatSessions.filter((s) => s.id !== sessionId);
-    set({ chatSessions: updatedSessions });
-    await AsyncStorage.setItem('chatSessions', JSON.stringify(updatedSessions));
+    await db.deleteSession(sessionId);
+    const sessions = await db.getSessions();
+
+    // Si la sesión borrada es la actual, limpiar la vista
+    if (get().currentSessionId === sessionId) {
+      set({ chatHistory: [], currentSessionId: null });
+    }
+
+    set({ chatSessions: sessions });
   },
 
-  // Load all settings from AsyncStorage
+  // Load all settings
   loadSettings: async () => {
     try {
-      const [userName, isFirstTime, theme, primaryColor, fontFamily, chatHistory, chatSessions] =
+      // Inicializar DB
+      await db.initDatabase();
+
+      const [userName, isFirstTime, theme, primaryColor, fontFamily] =
         await Promise.all([
           AsyncStorage.getItem('userName'),
           AsyncStorage.getItem('isFirstTime'),
           AsyncStorage.getItem('theme'),
           AsyncStorage.getItem('primaryColor'),
           AsyncStorage.getItem('fontFamily'),
-          AsyncStorage.getItem('chatHistory'),
-          AsyncStorage.getItem('chatSessions'),
         ]);
+
+      // Cargar sesiones de SQLite
+      const sessions = await db.getSessions();
 
       set({
         userName: userName || null,
@@ -105,8 +124,8 @@ const useSettingsStore = create((set, get) => ({
         theme: theme || 'light',
         primaryColor: primaryColor || '#4A90E2',
         fontFamily: fontFamily || 'default',
-        chatHistory: chatHistory ? JSON.parse(chatHistory) : [],
-        chatSessions: chatSessions ? JSON.parse(chatSessions) : [],
+        chatSessions: sessions,
+        chatHistory: [], // Empezar vacío o cargar la última sesión si se desea
       });
     } catch (error) {
       console.error('Error loading settings:', error);

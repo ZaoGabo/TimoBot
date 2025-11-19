@@ -47,7 +47,7 @@ module.exports = {
     web: {
       favicon: './assets/favicon.png',
     },
-    plugins: ['expo-font'],
+    plugins: ['expo-font', 'expo-sqlite'],
     extra: {
       timobotApiKey,
       perplexityProxyUrl,
