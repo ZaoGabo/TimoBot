@@ -1,15 +1,15 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import ChatMessage from '../ChatMessage';
-import useSettingsStore from '../../store/useSettingsStore';
+import useThemeStore from '../../store/useThemeStore';
 
-// Mock the settings store
-jest.mock('../../store/useSettingsStore');
+// Mock the theme store
+jest.mock('../../store/useThemeStore');
 
 describe('ChatMessage', () => {
   beforeEach(() => {
     // Reset mocks
-    useSettingsStore.mockReturnValue({
+    useThemeStore.mockReturnValue({
       theme: 'light',
       primaryColor: '#4A90E2',
       fontFamily: 'default',
@@ -45,7 +45,7 @@ describe('ChatMessage', () => {
   });
 
   it('should apply dark theme styles when theme is dark', () => {
-    useSettingsStore.mockReturnValue({
+    useThemeStore.mockReturnValue({
       theme: 'dark',
       primaryColor: '#4A90E2',
       fontFamily: 'default',
@@ -58,7 +58,7 @@ describe('ChatMessage', () => {
 
   it('should apply custom primary color to user messages', () => {
     const customColor = '#FF5733';
-    useSettingsStore.mockReturnValue({
+    useThemeStore.mockReturnValue({
       theme: 'light',
       primaryColor: customColor,
       fontFamily: 'default',
@@ -70,7 +70,7 @@ describe('ChatMessage', () => {
   });
 
   it('should apply serif font family when selected', () => {
-    useSettingsStore.mockReturnValue({
+    useThemeStore.mockReturnValue({
       theme: 'light',
       primaryColor: '#4A90E2',
       fontFamily: 'serif',
@@ -82,7 +82,7 @@ describe('ChatMessage', () => {
   });
 
   it('should apply monospace font family when selected', () => {
-    useSettingsStore.mockReturnValue({
+    useThemeStore.mockReturnValue({
       theme: 'light',
       primaryColor: '#4A90E2',
       fontFamily: 'monospace',

@@ -1,0 +1,66 @@
+{
+    "common": {
+        "appName": "TimoBot",
+        "ok": "Aceptar",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "close": "Cerrar",
+        "retry": "Reintentar",
+        "save": "Guardar"
+    },
+    "welcome": {
+        "title": "¡Bienvenido a TimoBot!",
+        "subtitle": "Tu asistente personal con IA",
+        "namePrompt": "¿Cómo te llamas?",
+        "namePlaceholder": "Tu nombre",
+        "continueButton": "Continuar"
+    },
+    "chat": {
+        "inputPlaceholder": "Escribe un mensaje...",
+        "sendButton": "Enviar",
+        "newChat": "Nuevo Chat",
+        "typing": "TimoBot está escribiendo...",
+        "history": "Conversaciones Anteriores",
+        "noHistory": "No hay conversaciones anteriores",
+        "noHistorySubtext": "Tus conversaciones aparecerán aquí",
+        "errorGeneric": "Lo siento {{userName}}, ocurrió un error. Por favor intenta nuevamente.",
+        "greetingMorning": "¡Buenos días, {{userName}}! ¿En qué puedo ayudarte hoy?",
+        "greetingAfternoon": "¡Buenas tardes, {{userName}}! ¿Cómo puedo asistirte?",
+        "greetingEvening": "¡Buenas noches, {{userName}}! ¿En qué te puedo ayudar?",
+        "greetingNight": "Hola {{userName}}, aún despierto. ¿Necesitas ayuda con algo?"
+    },
+    "settings": {
+        "title": "Configuración",
+        "appearance": "Apariencia",
+        "theme": "Tema",
+        "themeLight": "Claro",
+        "themeDark": "Oscuro",
+        "primaryColor": "Color Principal",
+        "fontFamily": "Fuente",
+        "fontDefault": "Por defecto",
+        "fontSerif": "Serif",
+        "fontMonospace": "Monospace",
+        "data": "Datos",
+        "clearHistory": "Borrar Historial de Chat",
+        "clearHistoryConfirm": "¿Estás seguro de que quieres borrar todo el historial?",
+        "resetName": "Cambiar Nombre",
+        "resetNameConfirm": "¿Quieres cambiar tu nombre?",
+        "account": "Cuenta",
+        "userName": "Nombre de usuario"
+    },
+    "errors": {
+        "boundary": {
+            "title": "¡Oops! Algo salió mal",
+            "message": "La aplicación encontró un error inesperado. No te preocupes, tus datos están seguros.",
+            "hint": "Si el problema persiste, intenta reiniciar la aplicación.",
+            "retryButton": "Reintentar"
+        },
+        "api": {
+            "invalidKey": "Error: API key inválida. Por favor verifica tu configuración.",
+            "rateLimit": "Error: Límite de solicitudes excedido. Intenta más tarde.",
+            "serverError": "Error: El servidor está experimentando problemas. Intenta más tarde.",
+            "networkError": "Error: No se pudo conectar con el servidor. Verifica tu conexión a internet.",
+            "invalidResponse": "Error: Respuesta inválida del servidor."
+        }
+    }
+}

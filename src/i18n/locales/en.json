@@ -1,0 +1,66 @@
+{
+    "common": {
+        "appName": "TimoBot",
+        "ok": "OK",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "close": "Close",
+        "retry": "Retry",
+        "save": "Save"
+    },
+    "welcome": {
+        "title": "Welcome to TimoBot!",
+        "subtitle": "Your personal AI assistant",
+        "namePrompt": "What's your name?",
+        "namePlaceholder": "Your name",
+        "continueButton": "Continue"
+    },
+    "chat": {
+        "inputPlaceholder": "Type a message...",
+        "sendButton": "Send",
+        "newChat": "New Chat",
+        "typing": "TimoBot is typing...",
+        "history": "Previous Conversations",
+        "noHistory": "No previous conversations",
+        "noHistorySubtext": "Your conversations will appear here",
+        "errorGeneric": "Sorry {{userName}}, an error occurred. Please try again.",
+        "greetingMorning": "Good morning, {{userName}}! How can I help you today?",
+        "greetingAfternoon": "Good afternoon, {{userName}}! How can I assist you?",
+        "greetingEvening": "Good evening, {{userName}}! What can I help you with?",
+        "greetingNight": "Hello {{userName}}, still awake. Need help with something?"
+    },
+    "settings": {
+        "title": "Settings",
+        "appearance": "Appearance",
+        "theme": "Theme",
+        "themeLight": "Light",
+        "themeDark": "Dark",
+        "primaryColor": "Primary Color",
+        "fontFamily": "Font",
+        "fontDefault": "Default",
+        "fontSerif": "Serif",
+        "fontMonospace": "Monospace",
+        "data": "Data",
+        "clearHistory": "Clear Chat History",
+        "clearHistoryConfirm": "Are you sure you want to clear all history?",
+        "resetName": "Change Name",
+        "resetNameConfirm": "Do you want to change your name?",
+        "account": "Account",
+        "userName": "User name"
+    },
+    "errors": {
+        "boundary": {
+            "title": "Oops! Something went wrong",
+            "message": "The application encountered an unexpected error. Don't worry, your data is safe.",
+            "hint": "If the problem persists, try restarting the application.",
+            "retryButton": "Retry"
+        },
+        "api": {
+            "invalidKey": "Error: Invalid API key. Please check your configuration.",
+            "rateLimit": "Error: Request limit exceeded. Try again later.",
+            "serverError": "Error: The server is experiencing problems. Try again later.",
+            "networkError": "Error: Could not connect to the server. Check your internet connection.",
+            "invalidResponse": "Error: Invalid response from server."
+        }
+    }
+}

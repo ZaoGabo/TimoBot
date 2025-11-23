@@ -1,0 +1,20 @@
+appId: com.timobot.app
+---
+- launchApp
+
+# Verificar que estamos en la pantalla de inicio
+- assertVisible: "TimoBot"
+
+# Escribir un mensaje
+- tapOn: "Campo de texto para mensaje"
+- inputText: "Hola TimoBot, esto es un test"
+- hideKeyboard
+
+# Enviar mensaje
+- tapOn: "Enviar mensaje"
+
+# Verificar que el mensaje aparece en el chat (como usuario)
+- assertVisible: "Hola TimoBot, esto es un test"
+
+# Esperar respuesta (opcional, depende de la velocidad de la API)
+# - assertVisible: "TimoBot dice" 

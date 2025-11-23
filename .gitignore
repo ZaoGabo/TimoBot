@@ -31,7 +31,3 @@ coverage/
 *.swp
 *.swo
 *~
-
-#archivos secretos locales
-*.md
-!README.md

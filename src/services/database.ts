@@ -1,8 +1,9 @@
 import * as SQLite from 'expo-sqlite';
+import type { Message, Session } from '../types';
 
-let db = null;
+let db: SQLite.SQLiteDatabase | null = null;
 
-export const initDatabase = async () => {
+export const initDatabase = async (): Promise<boolean> => {
     try {
         db = await SQLite.openDatabaseAsync('timobot.db');
 
@@ -39,10 +40,10 @@ export const initDatabase = async () => {
     }
 };
 
-export const createSession = async (id, date, preview) => {
+export const createSession = async (id: string, date: string, preview: string): Promise<boolean> => {
     if (!db) await initDatabase();
     try {
-        await db.runAsync(
+        await db!.runAsync(
             'INSERT INTO sessions (id, date, preview, title) VALUES (?, ?, ?, ?)',
             [id, date, preview, 'Nuevo Chat']
         );
@@ -53,10 +54,10 @@ export const createSession = async (id, date, preview) => {
     }
 };
 
-export const getSessions = async () => {
+export const getSessions = async (): Promise<Session[]> => {
     if (!db) await initDatabase();
     try {
-        const result = await db.getAllAsync('SELECT * FROM sessions ORDER BY date DESC');
+        const result = await db!.getAllAsync<Session>('SELECT * FROM sessions ORDER BY date DESC');
         return result;
     } catch (error) {
         console.error('Error getting sessions:', error);
@@ -64,10 +65,10 @@ export const getSessions = async () => {
     }
 };
 
-export const deleteSession = async (sessionId) => {
+export const deleteSession = async (sessionId: string): Promise<boolean> => {
     if (!db) await initDatabase();
     try {
-        await db.runAsync('DELETE FROM sessions WHERE id = ?', [sessionId]);
+        await db!.runAsync('DELETE FROM sessions WHERE id = ?', [sessionId]);
         return true;
     } catch (error) {
         console.error('Error deleting session:', error);
@@ -75,22 +76,22 @@ export const deleteSession = async (sessionId) => {
     }
 };
 
-export const saveMessage = async (sessionId, message) => {
+export const saveMessage = async (sessionId: string, message: Message): Promise<boolean> => {
     if (!db) await initDatabase();
     try {
         // Asegurarse de que la sesión existe, si no, crearla (fallback)
-        const sessionExists = await db.getFirstAsync('SELECT id FROM sessions WHERE id = ?', [sessionId]);
+        const sessionExists = await db!.getFirstAsync('SELECT id FROM sessions WHERE id = ?', [sessionId]);
         if (!sessionExists) {
             await createSession(sessionId, new Date().toISOString(), message.text.substring(0, 50));
         } else {
             // Actualizar preview de la sesión con el último mensaje
-            await db.runAsync(
+            await db!.runAsync(
                 'UPDATE sessions SET preview = ?, date = ? WHERE id = ?',
                 [message.text.substring(0, 50), message.timestamp, sessionId]
             );
         }
 
-        await db.runAsync(
+        await db!.runAsync(
             'INSERT INTO messages (id, session_id, text, is_user, timestamp) VALUES (?, ?, ?, ?, ?)',
             [message.id, sessionId, message.text, message.isUser ? 1 : 0, message.timestamp]
         );
@@ -101,18 +102,28 @@ export const saveMessage = async (sessionId, message) => {
     }
 };
 
-export const getMessages = async (sessionId) => {
+interface MessageRow {
+    id: string;
+    session_id: string;
+    text: string;
+    is_user: number;
+    timestamp: string;
+}
+
+export const getMessages = async (sessionId: string): Promise<Message[]> => {
     if (!db) await initDatabase();
     try {
-        const result = await db.getAllAsync(
+        const result = await db!.getAllAsync<MessageRow>(
             'SELECT * FROM messages WHERE session_id = ? ORDER BY timestamp ASC',
             [sessionId]
         );
 
         // Convertir is_user de 0/1 a boolean
         return result.map(msg => ({
-            ...msg,
-            isUser: msg.is_user === 1
+            id: msg.id,
+            text: msg.text,
+            isUser: msg.is_user === 1,
+            timestamp: msg.timestamp
         }));
     } catch (error) {
         console.error('Error getting messages:', error);
