@@ -1,7 +1,7 @@
 // i18n configuration (TypeScript version)
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import * as Localization from 'expo-localization';
+import { getLocales } from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import es from './locales/es.json';
@@ -25,7 +25,7 @@ const languageDetector: any = {
                 callback(savedLanguage);
                 return;
             }
-            const deviceLanguage = Localization.locale.split('-')[0]; // 'es-MX' -> 'es'
+            const deviceLanguage = getLocales()[0]?.languageCode || 'es'; // 'es-MX' -> 'es'
             const supportedLanguage = ['es', 'en'].includes(deviceLanguage) ? deviceLanguage : 'es';
             callback(supportedLanguage);
         } catch (error) {
@@ -49,7 +49,7 @@ i18n
     .init({
         resources,
         fallbackLng: 'es',
-        compatibilityJSON: 'v3', // For React Native
+        compatibilityJSON: 'v4', // For React Native
         interpolation: {
             escapeValue: false, // React already escapes
         },
